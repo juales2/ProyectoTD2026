@@ -55,7 +55,11 @@ Se plantean las siguientes cuatro preguntas que guiarán el análisis:
 # Importación y preprocesamiento de los datos
 
 ```{r}
-# Carga del archivo de logs
+# Carga inicial del archivo de logs
+logs <- read_csv("data/logs_moodle_anon.csv", show_col_types = FALSE)
+
+# Vista preliminar del dataset
+glimpse(logs)
 ```
 
 
