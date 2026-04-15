@@ -1,6 +1,6 @@
 ---
 title: "ProyectoTD2026"
-author: "Andrea Vandirek Romero, Julián Alcázar Escobedo"
+author: "Andrea Vandirek Romero, Julián Alcázar Escobedo,Jalal Imrani Mangat"
 date: "2026-04-15"
 output: html_document
 ---
