@@ -52,6 +52,11 @@ Se plantean las siguientes cuatro preguntas que guiarán el análisis:
     activa en entregas y cuestionarios?
 
 
+# Importación y preprocesamiento de los datos
+
+```{r}
+# Carga del archivo de logs
+```
 
 
 
