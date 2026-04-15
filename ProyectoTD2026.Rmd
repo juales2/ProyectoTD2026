@@ -1,0 +1,17 @@
+---
+title: "ProyectoTD2026"
+author: "Andrea Vandirek Romero"
+date: "2026-04-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+# Carga de librerías
+library(tidyverse)
+library(lubridate)
+library(knitr)
+```
+
