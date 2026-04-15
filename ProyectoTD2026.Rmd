@@ -15,3 +15,28 @@ library(lubridate)
 library(knitr)
 ```
 
+------------------------------------------------------------------------
+
+**Proyecto Tratamiento de Datos 2026 — Grupo O**
+
+------------------------------------------------------------------------
+
+# Introducción
+
+El objetivo principal de este proyecto es realizar un análisis
+exploratorio de los registros de actividad (*logs*) dentro del Aula Virtual
+durante el curso académico 2024-2025 de la asignatura Tratamiento de los Datos.
+
+Los datos con los logs, donde la información sensible se ha anonimizado, 
+se encuentran en el fichero `logs_moodle_anon.csv.` A través de este estudio, 
+transformaremos los datos brutos del archivo `logs_moodle_anon.csv` en
+información relevante para identificar patrones de uso, recursos críticos y
+comportamientos del alumnado en la plataforma.
+
+
+
+
+
+
+
+
