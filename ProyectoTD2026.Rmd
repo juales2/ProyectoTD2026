@@ -33,7 +33,23 @@ transformaremos los datos brutos del archivo `logs_moodle_anon.csv` en
 información relevante para identificar patrones de uso, recursos críticos y
 comportamientos del alumnado en la plataforma.
 
+## Preguntas de investigación
 
+Se plantean las siguientes cuatro preguntas que guiarán el análisis:
+
+1.  **Picos de actividad.** ¿Cuál es el horario de máxima actividad y
+    cómo varía entre días laborables y fines de semana?
+
+2.  **Correlación consultas–entregas.** ¿Existe una relación entre la
+    frecuencia de consulta de materiales y el número de entregas
+    realizadas por cada usuario?
+
+3.  **Optimización de recursos.** ¿Qué recursos o materiales
+    presentan un nivel de interacción nulo o muy bajo?
+
+4.  **Nivel de proactividad.** ¿Qué proporción de la actividad total del
+    alumnado es consulta pasiva de materiales frente a participación
+    activa en entregas y cuestionarios?
 
 
 
