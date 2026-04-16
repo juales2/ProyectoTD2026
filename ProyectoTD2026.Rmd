@@ -1,13 +1,12 @@
 ---
 title: "ProyectoTD2026"
-author: "Andrea Vandirek Romero"
+author: "Andrea Vandirek Romero, Julián Alcázar Escobedo,Jalal Imrani Mangat, Carmela Lorente, Mario Juan Moya"
 date: "2026-04-15"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
 
 # Carga de librerías
 library(tidyverse)
@@ -50,6 +49,14 @@ Se plantean las siguientes cuatro preguntas que guiarán el análisis:
 4.  **Nivel de proactividad.** ¿Qué proporción de la actividad total del
     alumnado es consulta pasiva de materiales frente a participación
     activa en entregas y cuestionarios?
+
+# ¿Qué esperamos de este tratamiento/estudio de losdatos?
+
+Con este tratamiento esperamos transformar los logs en métricas o patrones que permitan trocear la actividad por franjas horarias y tipos de día (laboral o festivo) para identificar los picos de uso, que nos serviria para poder elegir un horario donde la mayoria estuviesen disponibles para alguna actividad, por ejemplo. 
+
+Además, queriamos medir la proactividad y correlacionar el consumo de recursos con el rendimiento para que los profes puedan valorarr que archivos subir para que sean utiles y eficacesy cuales solo llenan mas visualmente la pagina.
+
+Finalmente, queriamos hacer la limpieza de registros nulos y la detección de outliers para que el análisis de recursos menos utilizados no esté sesgado por los errores de registro,y que cada click que estudiemos represente una interacción real del alumnado con el AulaVirtual.
 
 
 # Importación y preprocesamiento de los datos
