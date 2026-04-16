@@ -66,10 +66,13 @@ Finalmente, queriamos hacer la limpieza de registros nulos y la detección de ou
 # Carga inicial del archivo de logs
 logs <- read_csv("data/logs_moodle_anon.csv", show_col_types = FALSE)
 
-# Vista preliminar del dataset
+# Vista preliminar del dataset para analizar las variables y datos
 glimpse(logs)
 ```
 
+```{r tabla-logs}
+kable(head(logs, 10), caption = "Muestra de los primeros 10 registros de actividad.")
+```
 
 
 
