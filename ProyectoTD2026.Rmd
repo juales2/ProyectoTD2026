@@ -9,9 +9,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 # Carga de librerías
-library(tidyverse)
-library(lubridate)
-library(knitr)
+library(tidyverse) #pipe
+library(lubridate) #fechas
+library(knitr) #tablas
+library(ggplot2) #figuras
 ```
 
 ------------------------------------------------------------------------
