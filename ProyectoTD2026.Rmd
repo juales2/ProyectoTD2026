@@ -37,19 +37,27 @@ comportamientos del alumnado en la plataforma.
 
 Se plantean las siguientes cuatro preguntas que guiarán el análisis:
 
-1.  **Picos de actividad.** ¿Cuál es el horario de máxima actividad y
-    cómo varía entre días laborables y fines de semana?
+1.  **Picos de actividad.** ¿Cuál es el horario de máxima actividad y cómo
+    varía entre días laborables y fines de semana?
 
 2.  **Correlación consultas–entregas.** ¿Existe una relación entre la
-    frecuencia de consulta de materiales y el número de entregas
-    realizadas por cada usuario?
+    frecuencia de consulta de materiales y el número de entregas realizadas
+    por cada usuario?
 
-3.  **Optimización de recursos.** ¿Qué recursos o materiales
-    presentan un nivel de interacción nulo o muy bajo?
+3.  **Optimización de recursos.** ¿Qué recursos o materiales presentan un
+    nivel de interacción nulo o muy bajo?
 
 4.  **Nivel de proactividad.** ¿Qué proporción de la actividad total del
-    alumnado es consulta pasiva de materiales frente a participación
-    activa en entregas y cuestionarios?
+    alumnado es consulta pasiva de materiales frente a participación activa
+    en entregas y cuestionarios?
+    
+5.  **Recursos de alto impacto.** ¿Qué materiales generan el mayor volumen 
+    de interacción y qué indica esto sobre el interés o la dificultad de 
+    los contenidos?
+
+6.  **Patrones de conectividad.** ¿En qué medida predomina el acceso desde 
+    la red interna de la universidad frente a conexiones externas durante 
+    el horario de clase?
 
 # ¿Qué esperamos de este tratamiento/estudio de los datos?
 
