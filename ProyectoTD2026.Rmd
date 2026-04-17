@@ -75,4 +75,13 @@ kable(head(logs, 10), caption = "Muestra de los primeros 10 registros de activid
 ```
 
 
+```{r grafico-logs}
+frecuencias <- table(logs$Componente)
+barplot(frecuencias,
+        col = "violet",
+        las = 2,
+        main = "Actividad por Componente en AV",
+        ylab = "Número de registros")
+
+```
 
