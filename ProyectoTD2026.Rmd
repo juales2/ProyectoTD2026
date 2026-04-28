@@ -77,7 +77,9 @@ logs <- read_csv("data/logs_moodle_anon.csv", show_col_types = FALSE)
 # Vista preliminar del dataset para analizar las variables y datos
 glimpse(logs)
 ```
-
+Podemos observar que muchos registros aparecen con valores NA en la columna "Usuario afectado". Esto no representa un error en los datos, ya que muchas de las operaciones no involucran a un segundo usuario. 
+Vemos que por ahora todas las variables están en formato 'chr', por lo que será necesario transformarlas al tipo de dato correspondiente. Se identifica que en la columna 'Descripcion' se combinan los datos de la columna 'Componente' y los id del curso y estudiante. 
+A primera vista no se detectan valores atípicos evidentes.
 ```{r tabla-logs}
 kable(head(logs, 10), caption = "Muestra de los primeros 10 registros de actividad.")
 ```
