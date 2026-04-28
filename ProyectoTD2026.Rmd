@@ -78,9 +78,12 @@ logs <- read_csv("data/logs_moodle_anon.csv", show_col_types = FALSE)
 # Vista preliminar del dataset para analizar las variables y datos
 glimpse(logs)
 ```
+
 Podemos observar que muchos registros aparecen con valores NA en la columna "Usuario afectado". Esto no representa un error en los datos, ya que muchas de las operaciones no involucran a un segundo usuario. 
 Vemos que por ahora todas las variables están en formato 'chr', por lo que será necesario transformarlas al tipo de dato correspondiente. Se identifica que en la columna 'Descripcion' se combinan los datos de la columna 'Componente' y los id del curso y estudiante. Asimismo, dado que la temporalidad es crítica para el análisis, procederemos a filtrar los registros con valores nulos en la fecha, ya que carecen de valor informativo para este estudio. Tambien haremos una prueba si todas la IPs están en formato estándar IPv4 o IPv6, como se especifica en el codebook proporcionado.
 A primera vista no se detectan valores atípicos evidentes.
+
+
 ```{r}
 # Filtrado de cualquier fila sin fecha y cambio de formato
 logs <- logs %>% filter(!is.na(Hora)) %>% mutate( 
@@ -96,8 +99,9 @@ logs <- logs %>% filter(!is.na(Hora)) %>% mutate(
   # control de IPs
   IP_Correcta = ip_address(`Dirección IP`),
   IP_Correcta = is_ip_address(IP_Correcta)
-)
-glimpse(logs)
+) 
+#control que todas las IPs son correctas
+all(logs$IP_Correcta)
 ```
 
 
