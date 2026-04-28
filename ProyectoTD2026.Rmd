@@ -100,8 +100,10 @@ logs <- logs %>% filter(!is.na(Hora)) %>% mutate(
   IP_Correcta = ip_address(`Dirección IP`),
   IP_Correcta = is_ip_address(IP_Correcta)
 ) 
+
+
 #control que todas las IPs son correctas
-all(logs$IP_Correcta)
+cat("Todas las IPs son correctas: ", all(logs$IP_Correcta))
 ```
 
 
