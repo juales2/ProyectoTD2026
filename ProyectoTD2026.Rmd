@@ -86,7 +86,8 @@ logs <- logs %>% filter(!is.na(Hora)) %>% mutate( #formato de fecha "d/m/y, H:M:
   Hora =  parse_date_time(Hora, orders = "d/m/y, H:M:S"),
   # para el analisis en las siguientes preguntas nos conviene separar estos datos en fecha, hora y dia de la semana
   Fecha = as_date(Hora),
-  Horas = hour(Hora),
+  Horas = round_date(Hora, unit = "hour"),
+  Horas = hour(Horas),
   DiaSemana = wday(Hora, week_start = 1), # numeros en vez de nombre para que no influya el sistema operativo
   Componente = factor(Componente)
 )
