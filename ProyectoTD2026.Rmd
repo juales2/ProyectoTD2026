@@ -141,3 +141,24 @@ barplot(frecuencias,
 
 ```
 
+------------------------------------------------------------------------
+
+## Pregunta 2: ¿Existe una relación entre las consultas de material y el número de entregas?
+
+Para encontrar la respuesta a esta pregunta, debemos calcular para cada usuario el número de eventos vinculados a la
+visualización o descarga de recursos (`Total_Consultas`) y el número de entregas realizadas (`Total_Entregas`).
+Finalmente, representamos la correlación entre ambas variables para determinar su grado de dependencia.
+Para saber cuales son los eventos de consultas o de entregas hay que hacer un análisis exploratorio de los eventos registrados en los logs, identificando todos los tipos de eventos únicos presentes en el conjunto de datos.
+Una vez clasificados, se aplicará una función de agregación para calcular la suma de ambos tipos de eventos por cada identificador de usuario único.
+
+```{r consultas-vs-entregas-tabla}
+
+relacion_consultas_entregas <- logs %>% 
+  group_by(`Nombre completo del usuario`) %>%
+  summarise(Total_Entregas = sum())
+
+
+
+```
+
+
