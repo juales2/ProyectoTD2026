@@ -106,6 +106,20 @@ logs <- logs %>% filter(!is.na(Hora)) %>% mutate(
 cat("Todas las IPs son correctas: ", all(logs$IP_Correcta))
 ```
 
+A continuación, analizaremos la extensión del periodo temporal que abarcan los registros obtenidos. 
+
+```{r}
+
+resumen_temporal <- logs %>%
+  summarise(
+    inicio = min(Fecha),
+    fin = max(Fecha)
+  )
+
+print(resumen_temporal)
+```
+Vemos que la actividad comienza en julio de 2024, antes del inicio del curso académico, y se extiende hasta marzo de 2026. Este rango cubre casi dos años de registros. Aunque las preguntas planteadas son ambiguas y podrían aplicarse sin acotar este rango, tiene más sentido analizar un curso académico completo, idealmente el del año pasado, para así identificar qué aspectos es necesario mejorar de cara al futuro.
+
 
 ```{r tabla-logs}
 kable(head(logs, 10), caption = "Muestra de los primeros 10 registros de actividad.")
