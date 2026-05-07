@@ -197,10 +197,10 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
   geom_col(fill = "hotpink") +
   coord_flip() +
   labs(
-    title = "Top 10 Recursos con Menos Interacción",
-    subtitle = "Recursos que podrían ser eliminados o reubicados",
+    title = "Top 10 Recursos con menos interaccion",
+    subtitle = "Recursos que podrían eliminarse o reubicarse mejor",
     x = "Nombre del Recurso",
-    y = "Número de Clicks"
+    y = "Núm. de clicks"
   ) + theme_minimal()
 
 ```
