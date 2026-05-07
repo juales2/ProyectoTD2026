@@ -159,6 +159,51 @@ relacion_consultas_entregas <- logs %>%
 
 
 
+
+3.  Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un
+    nivel de interacción nulo o muy bajo? (C)
+
+
+# Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
+
+recursos_infrautilizados <- curso_2025 %>%
+  group_by(Componente) %>%
+  summarise(
+    Total_Interacciones = n(),
+    Usuarios_Unicos = n_distinct(`Nombre completo del usuario`)
+  ) %>% arrange(Total_Interacciones)
+
+# Identificar recursos con cero clicks o visitas
+# necesitamos nombre del recurso, en columna Contexto del evento
+
+recursos_especificos <- curso_2025 %>%
+  filter(Componente %in% c("Archivo", "Carpeta", "URL", "Página")) %>%
+  group_by(`Contexto del evento`) %>%
+  summarise(
+    Clicks = n(),
+    Estudiantes_Distintos = n_distinct(`Nombre completo del usuario`)
+  ) %>%
+  arrange(Clicks)
+
+# Definir un umbral de Baja interacción
+
+umbral_bajo = 5
+recursos_criticos <- recursos_especificos %>% 
+  filter(Clicks < umbral_bajo)
+
+# Visualización de los 10 recursos menos utilizados
+
+ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Clicks), y = Clicks)) +
+  geom_col(fill = "firebrick") +
+  coord_flip() +
+  labs(
+    title = "Top 10 Recursos con Menos Interacción",
+    subtitle = "Recursos que podrían ser eliminados o reubicados",
+    x = "Nombre del Recurso",
+    y = "Número de Clicks"
+  ) + theme_minimal()
+
+
 ```
 
 
