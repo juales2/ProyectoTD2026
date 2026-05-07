@@ -157,13 +157,13 @@ relacion_consultas_entregas <- logs %>%
   group_by(`Nombre completo del usuario`) %>%
   summarise(Total_Entregas = sum())
 
-
+```
 
 
 3.  Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un
     nivel de interacción nulo o muy bajo? (C)
 
-
+```{r recursos menos vistos analisis}
 # Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
 
 recursos_infrautilizados <- curso_2025 %>%
@@ -203,7 +203,7 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
     y = "Número de Clicks"
   ) + theme_minimal()
 
-
 ```
+
 
 
