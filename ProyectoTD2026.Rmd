@@ -194,7 +194,7 @@ recursos_criticos <- recursos_especificos %>%
 # Visualización de los 10 recursos menos utilizados
 
 ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Clicks), y = Clicks)) +
-  geom_col(fill = "firebrick") +
+  geom_col(fill = "hotpink") +
   coord_flip() +
   labs(
     title = "Top 10 Recursos con Menos Interacción",
