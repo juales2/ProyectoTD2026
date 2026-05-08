@@ -170,12 +170,15 @@ relacion_consultas_entregas <- logs_estudiante %>%
   group_by(`Nombre completo del usuario`) %>%
   summarise(Total_Entregas = sum(str_detect(`Nombre evento`, pattern = regex(entregas, ignore_case = TRUE))), Total_Consultas = sum(str_detect(`Nombre evento`, pattern = regex(consultas, ignore_case = TRUE))))
 
-# Vista de los registros
+```
+```{r tabla de relacion entre consultas_entregas}
 relacion_consultas_entregas %>%
   arrange(desc(Total_Entregas)) %>%
   kable(caption = "Usuarios con mayor número de entregas")
-
 ```
+
+
+
 
 ## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C)
 
