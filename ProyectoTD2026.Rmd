@@ -155,11 +155,25 @@ El análisis se centra exclusivamente en el alumnado de la asignatura. En consec
 ```{r consultas-vs-entregas-tabla}
 #visualizamos todos los diferentes tipos de eventos
 unique(logs$`Nombre evento`)
-consultas < - c('visto|vista|visualizado|visualizada|visitado|visitado')  
+consultas <- c('visto|vista|visualizado|visualizada|visitado|visitado|descargado|descargada')
+entregas <- c('enviado|entrega|subido|enviadas|enviada')
+eventos_profesor <- "Calificar|calificado|calificación|editada|editado|eliminado|eliminada|notas de usuario|actualizado|creado|creada"
 
-relacion_consultas_entregas <- logs %>% 
+profesores <- logs %>% filter(str_detect(`Nombre evento`, 
+                                              pattern = regex(eventos_profesor, ignore_case = TRUE))) %>%
+  distinct(`Nombre completo del usuario`) %>%
+  pull(`Nombre completo del usuario`)
+
+logs_estudiante <- logs %>% filter(!(`Nombre completo del usuario` %in% profesores))
+
+relacion_consultas_entregas <- logs_estudiante %>% 
   group_by(`Nombre completo del usuario`) %>%
-  summarise(Total_Entregas = sum(str_detect(`Nombre evento`, pattern = )), Total_Consultas = sum())
+  summarise(Total_Entregas = sum(str_detect(`Nombre evento`, pattern = regex(entregas, ignore_case = TRUE))), Total_Consultas = sum(str_detect(`Nombre evento`, pattern = regex(consultas, ignore_case = TRUE))))
+
+# Vista de los registros
+relacion_consultas_entregas %>%
+  arrange(desc(Total_Entregas)) %>%
+  kable(caption = "Usuarios con mayor número de entregas")
 
 ```
 
