@@ -150,12 +150,16 @@ visualización o descarga de recursos (`Total_Consultas`) y el número de entreg
 Finalmente, representamos la correlación entre ambas variables para determinar su grado de dependencia.
 Para saber cuales son los eventos de consultas o de entregas hay que hacer un análisis exploratorio de los eventos registrados en los logs, identificando todos los tipos de eventos únicos presentes en el conjunto de datos.
 Una vez clasificados, se aplicará una función de agregación para calcular la suma de ambos tipos de eventos por cada identificador de usuario único.
+El análisis se centra exclusivamente en el alumnado de la asignatura. En consecuencia, se excluyen los registros correspondientes al profesorado. Estos perfiles se identificaron mediante la detección de eventos de acceso restringidos para los estudiantes.
 
 ```{r consultas-vs-entregas-tabla}
+#visualizamos todos los diferentes tipos de eventos
+unique(logs$`Nombre evento`)
+consultas < - c('visto|vista|visualizado|visualizada|visitado|visitado')  
 
 relacion_consultas_entregas <- logs %>% 
   group_by(`Nombre completo del usuario`) %>%
-  summarise(Total_Entregas = sum())
+  summarise(Total_Entregas = sum(str_detect(`Nombre evento`, pattern = )), Total_Consultas = sum())
 
 ```
 
