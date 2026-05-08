@@ -159,11 +159,9 @@ relacion_consultas_entregas <- logs %>%
 
 ```
 
+## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C)
 
-3.  Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un
-    nivel de interacción nulo o muy bajo? (C)
-
-```{r recursos menos vistos analisis}
+```{r recursos-menos-vistos}
 # Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
 
 recursos_infrautilizados <- curso_2025 %>%
