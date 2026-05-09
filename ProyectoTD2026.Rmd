@@ -15,6 +15,7 @@ library(knitr) #tablas
 library(kableExtra) #disenyo de tablas
 library(ggplot2) #figuras
 library(ipaddress) #IPs
+library(dplyr)
 ```
 
 ------------------------------------------------------------------------
@@ -157,8 +158,8 @@ El análisis se centra exclusivamente en el alumnado de la asignatura. En consec
 #visualizamos todos los diferentes tipos de eventos
 #unique(logs$`Nombre evento`)
 consultas <- c('visto|vista|visualizado|visualizada|visitado|visitado|descargado|descargada')
-entregas <- c('enviado|entrega|subido|enviadas|enviada')
-eventos_profesor <- "calificar|calificado|calificación|editada|editado|eliminado|eliminada|notas de usuario|actualizado|creado|creada"
+entregas <- c('enviado|subida|subido|enviadas|enviada')
+eventos_profesor <- "calificar|Informe de registro|matriculado"
 
 profesores <- logs %>% filter(str_detect(`Nombre evento`, 
                                               pattern = regex(eventos_profesor, ignore_case = TRUE))) %>%
@@ -169,16 +170,20 @@ logs_estudiante <- logs %>% filter(!(`Nombre completo del usuario` %in% profesor
 
 relacion_consultas_entregas <- logs_estudiante %>% 
   group_by(`Nombre completo del usuario`) %>%
-  summarise(Total_Entregas = sum(str_detect(`Nombre evento`, pattern = regex(entregas, ignore_case = TRUE))), Total_Consultas = sum(str_detect(`Nombre evento`, pattern = regex(consultas, ignore_case = TRUE))))
+  summarize(
+    Total_Entregas = sum(str_detect(`Nombre evento`, pattern = regex(entregas, ignore_case = TRUE))), 
+    Total_Consultas = sum(str_detect(`Nombre evento`, pattern = regex(consultas, ignore_case = TRUE))),
+    .groups = 'drop')
 
 ```
+
 
 
 ```{r tabla de relacion entre consultas_entregas}
 relacion_consultas_entregas %>%
   arrange(desc(Total_Entregas)) %>%
   kable(caption = "Usuarios con mayor número de entregas") %>%
-  
+  kable_styling(bootstrap_options = c("hover", "responsive"), full_width = FALSE)
 ```
 
 
