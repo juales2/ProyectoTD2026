@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse) #pipe
 library(lubridate) #fechas
 library(knitr) #tablas
+library(kableExtra) #disenyo de tablas
 library(ggplot2) #figuras
 library(ipaddress) #IPs
 ```
@@ -154,10 +155,10 @@ El análisis se centra exclusivamente en el alumnado de la asignatura. En consec
 
 ```{r consultas-vs-entregas-tabla}
 #visualizamos todos los diferentes tipos de eventos
-unique(logs$`Nombre evento`)
+#unique(logs$`Nombre evento`)
 consultas <- c('visto|vista|visualizado|visualizada|visitado|visitado|descargado|descargada')
 entregas <- c('enviado|entrega|subido|enviadas|enviada')
-eventos_profesor <- "Calificar|calificado|calificación|editada|editado|eliminado|eliminada|notas de usuario|actualizado|creado|creada"
+eventos_profesor <- "calificar|calificado|calificación|editada|editado|eliminado|eliminada|notas de usuario|actualizado|creado|creada"
 
 profesores <- logs %>% filter(str_detect(`Nombre evento`, 
                                               pattern = regex(eventos_profesor, ignore_case = TRUE))) %>%
@@ -171,10 +172,13 @@ relacion_consultas_entregas <- logs_estudiante %>%
   summarise(Total_Entregas = sum(str_detect(`Nombre evento`, pattern = regex(entregas, ignore_case = TRUE))), Total_Consultas = sum(str_detect(`Nombre evento`, pattern = regex(consultas, ignore_case = TRUE))))
 
 ```
+
+
 ```{r tabla de relacion entre consultas_entregas}
 relacion_consultas_entregas %>%
   arrange(desc(Total_Entregas)) %>%
-  kable(caption = "Usuarios con mayor número de entregas")
+  kable(caption = "Usuarios con mayor número de entregas") %>%
+  
 ```
 
 
