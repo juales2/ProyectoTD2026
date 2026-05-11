@@ -178,6 +178,28 @@ relacion_consultas_entregas %>%
 ```
 
 
+```{r grafico_correlacion_consultas_entregas}
+correlacion_valor <- cor(relacion_consultas_entregas$Total_Consultas, 
+                         relacion_consultas_entregas$Total_Entregas, 
+                         method = "pearson")
+cat("La correlación entre las consultas y entregas es de :", correlacion_valor)
+
+#ggpairs(head(relacion_consultas_entregas, 10), title = "Matriz de Correlación") + theme_bw()
+
+ggplot(relacion_consultas_entregas, aes(x = Total_Entregas, y = Total_Consultas)) + 
+  geom_point(color = "red") +
+  geom_smooth(method = "lm", color = "darkred", fill = "lightgray") +
+  labs(
+    title = "Relación entre Consultas y Entregas",
+    subtitle = paste("Coeficiente de correlación de Pearson:", round(correlacion_valor, 3)),
+    x = "Total de Consultas",
+    y = "Total de Entregas",
+    caption = "Nota: Registros solo del alumnado"
+  )
+```
+Inicialmente se consideró el uso de la función ggpairs() para representar la matriz de correlación entre ambas variables. No obstante, dada la elevada densidad de los registros y la disparidad en los rangos de los datos del archivo original, dicha visualización resultaba confusa y dificultaba la interpretación de los resultados. Por eso, se optó por un diagrama de dispersión con anotaciones, usando el coeficiente de correlación de Pearson para evaluar la relación lineal entre el número de consultas y de entregas.
+Los resultados revelan una correlación positiva significativa entre ambas variables. Cuanto más material consultan los alumnos, más tareas entregan generalmente.
+
 
 
 ## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C)
