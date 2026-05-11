@@ -9,13 +9,14 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 # Carga de librerías
-library(tidyverse) #pipe
-library(lubridate) #fechas
-library(knitr) #tablas
-library(kableExtra) #disenyo de tablas
-library(ggplot2) #figuras
-library(ipaddress) #IPs
-library(dplyr)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(
+  tidyverse,  # Incluye ggplot2 y dplyr
+  lubridate,  # Manejo de fechas
+  knitr,      # Tablas
+  kableExtra, # Diseño de tablas
+  ipaddress   # Manejo de IPs
+)
 ```
 
 ------------------------------------------------------------------------
