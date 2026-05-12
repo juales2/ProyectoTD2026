@@ -248,4 +248,20 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
 ```
 
 
+# Pregunta 6: Patrones de conectividad
+***
+
+El análisis de la procedencia de las conexiones es fundamental para entender el comportamiento del alumnado y la utilidad de las infraestructuras universitarias. En esta sección, nos proponemos investigar en qué medida predomina el acceso desde la red interna de la universidad (LAN/WiFi eduroam) frente a conexiones externas (hogares o redes móviles) durante el horario lectivo.
+
+Para ello, utilizaremos la librería **ipaddress** con el fin de clasificar cada registro de los logs.
+
+```{r}
+curso_2025 %>%
+  filter(hour(Hora) >= 9 & hour(Hora) <= 12) %>%
+  count(`Dirección IP`, sort = TRUE)
+```
+
+Viendo cuales son las direcciones IP más repetidas durante horario lectivo podemos sacar varias conclusiones. La dirección IP con mas registros **2001:720:1014:88:0:0:a:6b7** lo que sugiere que sea la que corresponde a la infraestructura WiFi eduroam del campus. En segundo lugar hay una IP que corresponde a una compañía telefónica (Posiblemente se trate de una IP de un alumno muy aplicado o una casa donde varias personas se conectan desde la misma red). Y la última direccion IP con más diferencia de uso a todas las demás **147.156.86.41**, se trata de la IP que utilizan los ordenadores de la universidad.
+
+
 
