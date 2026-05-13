@@ -1,6 +1,6 @@
 ---
 title: "ProyectoTD2026"
-author: "Andrea Vandirek Romero, Julián Alcázar Escobedo,Jalal Imrani Mangat, Carmela Lorente, Mario Juan Moya"
+author: "Andrea Vandirek Romero, Julián Alcázar Escobedo, Jalal Imrani Mangat, Carmela Lorente, Mario Juan Moya"
 date: "2026-04-15"
 output: html_document
 ---
@@ -9,12 +9,17 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 # Carga de librerías
-if (!require("pacman")) install.packages("pacman")
+if (!require("pacman"))
+  install.packages("pacman")
 pacman::p_load(
-  tidyverse,  # Incluye ggplot2 y dplyr
-  lubridate,  # Manejo de fechas
-  knitr,      # Tablas
-  kableExtra, # Diseño de tablas
+  tidyverse,
+  # Incluye ggplot2 y dplyr
+  lubridate,
+  # Manejo de fechas
+  knitr,
+  # Tablas
+  kableExtra,
+  # Diseño de tablas
   ipaddress   # Manejo de IPs
 )
 ```
@@ -89,21 +94,21 @@ A primera vista no se detectan valores atípicos evidentes.
 
 ```{r}
 # Filtrado de cualquier fila sin fecha y cambio de formato
-logs <- logs %>% filter(!is.na(Hora)) %>% mutate( 
+logs <- logs %>% filter(!is.na(Hora)) %>% mutate(
   # formato de fecha "d/m/y, H:M:S" (año con 2 dígitos)
   Hora =  parse_date_time(Hora, orders = "d/m/y, H:M:S"),
   # para el analisis en las siguientes preguntas nos conviene separar estos datos en fecha, hora y dia de la semana
   Fecha = as_date(Hora),
   Horas = round_date(Hora, unit = "hour"),
   Horas = hour(Horas),
-  DiaSemana = wday(Hora, week_start = 1), # numeros en vez de nombre para que no influya el sistema operativo
+  DiaSemana = wday(Hora, week_start = 1),
+  # numeros en vez de nombre para que no influya el sistema operativo
   # formateo
   Componente = factor(Componente),
   # control de IPs
   IP_Correcta = ip_address(`Dirección IP`),
   IP_Correcta = is_ip_address(IP_Correcta)
-) 
-
+)
 
 #control que todas las IPs son correctas
 cat("Todas las IPs son correctas: ", all(logs$IP_Correcta))
@@ -112,28 +117,169 @@ cat("Todas las IPs son correctas: ", all(logs$IP_Correcta))
 A continuación, analizaremos la extensión del periodo temporal que abarcan los registros obtenidos. 
 
 ```{r}
-
 resumen_temporal <- logs %>%
-  summarise(
-    inicio = min(Fecha),
-    fin = max(Fecha)
-  )
+  summarise(inicio = min(Fecha), fin = max(Fecha))
 
 print(resumen_temporal)
 ```
 Vemos que la actividad comienza en julio de 2024, antes del inicio del curso académico, y se extiende hasta marzo de 2026. Este rango cubre casi dos años de registros. Aunque las preguntas planteadas son ambiguas y podrían aplicarse sin acotar este rango, tiene más sentido analizar un curso académico completo, idealmente el del año pasado, para así identificar qué aspectos es necesario mejorar de cara al futuro.
+
 ```{r}
 curso_2025 <- logs %>%
-  filter(Fecha >= as.Date("2024-09-01") & Fecha <= as.Date("2025-08-31"))
+  filter(Fecha >= as.Date("2024-09-01") &
+           Fecha <= as.Date("2025-08-31"))
 ```
-
-
 
 ```{r tabla-logs}
 kable(head(logs, 10), caption = "Muestra de los primeros 10 registros de actividad.")
 ```
 
+------------------------------------------------------------------------
 
+## Pregunta 1: Picos de actividad. ¿Cuál es el horario de máxima actividad y cómo varía entre días laborables y fines de semana?
+
+Para responder a esta pregunta, clasificamos cada registro del curso académico 2024-2025 según la hora del día (franja horaria de 0 a 23) y el tipo de día (laborable de lunes a viernes, o fin de semana sábado y domingo). A continuación, contamos el número de eventos por franja horaria y tipo de día para identificar los picos de actividad.
+
+```{r p1-datos, message=FALSE, warning=FALSE}
+# Clasificación de los registros por hora y tipo de día
+actividad_horaria <- curso_2025 %>%
+  mutate(TipoDia = if_else(DiaSemana <= 5, "Laborable", "Fin de semana")) %>%
+  group_by(Horas, TipoDia) %>%
+  summarise(Eventos = n(), .groups = "drop")
+
+# Hora pico global
+hora_pico_global <- actividad_horaria %>%
+  group_by(Horas) %>%
+  summarise(Total = sum(Eventos), .groups = "drop") %>%
+  slice_max(Total, n = 1)
+
+# Hora pico por tipo de día
+hora_pico_tipo <- actividad_horaria %>%
+  group_by(TipoDia) %>%
+  slice_max(Eventos, n = 1) %>%
+  ungroup()
+
+cat("Hora de mayor actividad global:", hora_pico_global$Horas, "h con",
+    hora_pico_global$Total, "eventos\n")
+cat("Hora pico en días laborables:",
+    hora_pico_tipo$Horas[hora_pico_tipo$TipoDia == "Laborable"], "h\n")
+cat("Hora pico en fines de semana:",
+    hora_pico_tipo$Horas[hora_pico_tipo$TipoDia == "Fin de semana"], "h\n")
+```
+
+En la Tabla \@ref(tab:tabla-actividad-horaria) se muestra el número de eventos registrados por franja horaria y tipo de día para las horas con mayor actividad (de 7:00 a 23:00).
+
+```{r tabla-actividad-horaria}
+actividad_horaria %>%
+  filter(Horas >= 7) %>%
+  pivot_wider(names_from = TipoDia,
+              values_from = Eventos,
+              values_fill = 0) %>%
+  rename(Hora = Horas) %>%
+  arrange(Hora) %>%
+  kable(caption = "Eventos por franja horaria y tipo de día (horas >= 7:00)") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE
+  )
+```
+
+La Figura \@ref(fig:fig-actividad-horaria) representa la distribución de eventos a lo largo del día distinguiendo entre días laborables y fines de semana.
+
+```{r fig-actividad-horaria, fig.cap="Distribución de la actividad horaria en días laborables y fines de semana durante el curso 2024-2025."}
+ggplot(actividad_horaria,
+       aes(
+         x = Horas,
+         y = Eventos,
+         color = TipoDia,
+         group = TipoDia
+       )) +
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 2.2) +
+  scale_x_continuous(breaks = 0:23) +
+  scale_color_manual(values = c("Laborable" = "blue", "Fin de semana" = "red"),
+                     name = "Tipo de día") +
+  labs(
+    title = "Actividad horaria en el Aula Virtual",
+    subtitle = "Curso académico 2024-2025",
+    x = "Hora del día",
+    y = "Número de eventos"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "top")
+```
+
+Para profundizar en el análisis, estudiamos cómo se distribuye la actividad total a lo largo de los siete días de la semana.
+
+```{r p1-diasemana-datos, message=FALSE, warning=FALSE}
+etiquetas_dia <- c("Lunes",
+                   "Martes",
+                   "Miércoles",
+                   "Jueves",
+                   "Viernes",
+                   "Sábado",
+                   "Domingo")
+
+actividad_diasemana <- curso_2025 %>%
+  mutate(
+    NombreDia = factor(etiquetas_dia[DiaSemana], levels = etiquetas_dia),
+    TipoDia   = if_else(DiaSemana <= 5, "Laborable", "Fin de semana")
+  ) %>%
+  group_by(NombreDia, TipoDia) %>%
+  summarise(Eventos = n(), .groups = "drop")
+
+# Día con más actividad
+dia_pico <- actividad_diasemana %>% slice_max(Eventos, n = 1)
+cat("Día de mayor actividad:", as.character(dia_pico$NombreDia),
+    "con", dia_pico$Eventos, "eventos\n")
+```
+
+La Tabla \@ref(tab:tabla-diasemana) recoge el total de eventos registrados en cada día de la semana.
+
+```{r tabla-diasemana}
+actividad_diasemana %>%
+  mutate(Porcentaje = paste0(round(Eventos / sum(Eventos) * 100, 1), " %")) %>%
+  rename(`Día` = NombreDia,
+         `Tipo` = TipoDia,
+         `Nº eventos` = Eventos) %>%
+  kable(caption = "Total de eventos por día de la semana (curso 2024-2025)") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE
+  ) %>%
+  row_spec(which(actividad_diasemana$TipoDia == "Fin de semana"),
+           background = "#FFF0EE")
+```
+
+La Figura \@ref(fig:fig-diasemana-barras) muestra el volumen de eventos por día de la semana mediante un gráfico de barras.
+
+```{r fig-diasemana-barras, fig.cap="Volumen total de eventos por día de la semana durante el curso 2024-2025. Los días de fin de semana aparecen en rojo."}
+ggplot(actividad_diasemana,
+       aes(x = NombreDia, y = Eventos, fill = TipoDia)) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = scales::comma(Eventos)),
+            vjust = -0.4,
+            size = 3.2) +
+  scale_fill_manual(values = c("Laborable" = "blue", "Fin de semana" = "red"),
+                    name = "Tipo de día") +
+  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.1))) +
+  labs(
+    title    = "Actividad en el Aula Virtual por día de la semana",
+    subtitle = "Curso académico 2024-2025",
+    x = NULL,
+    y = "Número de eventos"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "top")
+```
+
+**Interpretación.** El análisis revela patrones de uso bien diferenciados tanto por tipo de día como por día concreto de la semana:
+
+- **Días laborables:** concentran el **89,9 %** de la actividad total del curso (97.685 eventos frente a 10.976 en fin de semana). El pico horario global se sitúa a las **12:00 h** (13.187 eventos en total), con la mayor concentración entre las **9:00 y las 14:00 h**, franja que coincide con el horario lectivo habitual. Se observa además un repunte a las **23:00 h** (4.145 eventos), lo que indica que una parte del alumnado accede a la plataforma al final del día. Dentro de los laborables, la actividad no es uniforme: el **miércoles** es el día de mayor uso con **25.251 eventos** (23,2 % del total semanal), seguido del **viernes** (22.159, 20,4 %) y el **martes** (18.085, 16,6 %). **Lunes y jueves** registran una actividad moderada (15.736 y 16.454 eventos respectivamente) siendo los días más tranquilos de la semana laboral.
+
+- **Fines de semana:** la actividad cae de forma notable. El **sábado** es el día más inactivo de toda la semana con solo **4.707 eventos** (4,3 %), incluso por debajo del domingo (6.269, 5,8 %). A diferencia de los laborables, el pico horario se desplaza a las **13:00 h** (1.149 eventos) y la actividad se mantiene relativamente constante entre las 11:00 y las 23:00 h, sin el pronunciado pico de mediodía propio de los días de clase. Esto refleja un uso más autónomo y flexible de la plataforma cuando no hay clases presenciales.
+
+En conclusión, la actividad en el Aula Virtual está fuertemente condicionada por el calendario académico: los miércoles y viernes en la franja de 9:00 a 14:00 h concentran los mayores picos de uso, mientras que los fines de semana, especialmente el sábado, presentan una actividad mínima distribuida de forma más uniforme a lo largo del día. Lo más probable es que en el curso 24-25 los alumnos tubiesen las dos clases semanales de la asignatura los miercoles a las **9:00 h** y los viernes a las **11:30 h**.
 
 ------------------------------------------------------------------------
 
