@@ -407,13 +407,53 @@ El análisis de la procedencia de las conexiones es fundamental para entender el
 
 Para ello, utilizaremos la librería **ipaddress** con el fin de clasificar cada registro de los logs.
 
-```{r}
-curso_2025 %>%
+```{r tabla-contador-ip}
+contador_ips <- curso_2025 %>%
   filter(hour(Hora) >= 9 & hour(Hora) <= 12) %>%
-  count(`Dirección IP`, sort = TRUE)
+  count(`Dirección IP`, sort = TRUE) %>% head(10)
+kable(contador_ips, caption = "Top 10 de direcciones IP más frecuentes en horario lectivo")
 ```
 
-Viendo cuales son las direcciones IP más repetidas durante horario lectivo podemos sacar varias conclusiones. La dirección IP con mas registros **2001:720:1014:88:0:0:a:6b7** lo que sugiere que sea la que corresponde a la infraestructura WiFi eduroam del campus. En segundo lugar hay una IP que corresponde a una compañía telefónica (Posiblemente se trate de una IP de un alumno muy aplicado o una casa donde varias personas se conectan desde la misma red). Y la última direccion IP con más diferencia de uso a todas las demás **147.156.86.41**, se trata de la IP que utilizan los ordenadores de la universidad.
+Viendo la tabla \@ref(tab:tabla-contador-ip) cuales son las direcciones IP más repetidas durante horario lectivo podemos sacar varias conclusiones. La dirección IP con mas registros **2001:720:1014:88:0:0:a:6b7** lo que sugiere que sea la que corresponde a la infraestructura WiFi eduroam del campus. En segundo lugar hay una IP que corresponde a una compañía telefónica (Posiblemente se trate de una IP de un alumno muy aplicado o una casa donde varias personas se conectan desde la misma red). Y la última direccion IP con más diferencia de uso a todas las demás **147.156.86.41**, se trata de la IP que utilizan los ordenadores de la universidad.
+
+Este gráfico \@ref(fig:fig-conexiones-lectivas) muestra claramente que son muy pocas las conexiones internas fuera de horario lectivo. Algo igual de lógico que la gran cantidad de conexiones internas en el horario lectivo.
+```{r fig-conexiones-lectivas, fig.cap = "Conexiones: Internas vs Externas"}
+red_uv_v4 <- ip_network("147.156.0.0/16")
+red_uv_v6 <- ip_network("2001:720:1014::/48")
+
+logs_e6 <- curso_2025 %>% 
+  filter(IP_Correcta == TRUE,!is.na(`Dirección IP`), !is.na(Horas), !is.na(DiaSemana)) %>%
+  mutate(
+    IP = ip_address(`Dirección IP`),
+    Es_interna = is_within(IP, red_uv_v4) | is_within(IP, red_uv_v6),
+    Tipo_conexion = if_else(Es_interna, "Interna (Campus)", "Externa (Casa/Móvil)"),
+    Horario = if_else(DiaSemana <= 5 & Horas >= 9 & Horas < 15, 
+                      "Lectivo", "Fuera de horario")
+  ) %>%
+  filter(!is.na(Tipo_conexion))
+
+#kable(logs_e6)
+
+resumen_e6 <- logs_e6 %>%
+  group_by(Horario, Tipo_conexion) %>%
+  summarise(Total = n(), .groups = 'drop') %>%
+  mutate(Porcentaje = round(Total / sum(Total) * 100, 2))
+
+kable(resumen_e6)
+
+ggplot(logs_e6, aes(x = Horario, fill = Tipo_conexion)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = c("Interna (Campus)" = "#2E86C1", "Externa (Casa/Móvil)" = "#E67E22")) +
+  labs(
+    title = "Predominio de Conexión: Universidad vs. Exterior",
+    subtitle = "Comparativa basada en rangos IPv4/IPv6 de la UV durante horario lectivo",
+    x = "Franja Horaria",
+    y = "Proporción de Accesos",
+    fill = "Origen de Conexión"
+  ) +
+  theme_minimal()
+```
 
 
 
