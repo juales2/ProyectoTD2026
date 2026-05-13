@@ -461,7 +461,7 @@ La gran parte del volumen de las conexiones se concentra entre las 10:00 y las 1
 
 Domingos y sabados hay muy pocas conexiones y todas son externas.
 
-```{r fig-historiograma-origen-dia, fig.cap = "Historiogramas de conexiones por día de la semana.}
+```{r fig-historiograma-origen-dia, fig.cap = "Historiogramas de conexiones por día de la semana."}
 logs_e6 <- logs_e6 %>%
   mutate(NombreDia = wday(Hora, label = TRUE, abbr = FALSE, week_start = 1))
 
