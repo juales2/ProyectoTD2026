@@ -2,7 +2,9 @@
 title: "ProyectoTD2026"
 author: "Andrea Vandirek Romero, Julián Alcázar Escobedo, Jalal Imrani Mangat, Carmela Lorente, Mario Juan Moya"
 date: "2026-04-15"
-output: html_document
+output: 
+  bookdown::html_document2: default
+  bookdown::pdf_document2: default
 ---
 
 ```{r setup, include=FALSE}
@@ -22,6 +24,8 @@ pacman::p_load(
   # Diseño de tablas
   ipaddress   # Manejo de IPs
 )
+
+
 ```
 
 ------------------------------------------------------------------------
