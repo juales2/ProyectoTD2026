@@ -416,7 +416,7 @@ kable(contador_ips, caption = "Top 10 de direcciones IP más frecuentes en horar
 
 Viendo la tabla \@ref(tab:tabla-contador-ip) cuales son las direcciones IP más repetidas durante horario lectivo podemos sacar varias conclusiones. La dirección IP con mas registros **2001:720:1014:88:0:0:a:6b7** lo que sugiere que sea la que corresponde a la infraestructura WiFi eduroam del campus. En segundo lugar hay una IP que corresponde a una compañía telefónica (Posiblemente se trate de una IP de un alumno muy aplicado o una casa donde varias personas se conectan desde la misma red). Y la última direccion IP con más diferencia de uso a todas las demás **147.156.86.41**, se trata de la IP que utilizan los ordenadores de la universidad.
 
-Este gráfico \@ref(fig:fig-conexiones-lectivas) muestra claramente que son muy pocas las conexiones internas fuera de horario lectivo. Algo igual de lógico que la gran cantidad de conexiones internas en el horario lectivo.
+Este gráfico \@ref(fig:fig-conexiones-lectivas) muestra claramente que son muy pocas las conexiones internas fuera de horario lectivo. De la misma manera las conexiones internas en el horario lectivo son un poco mas del 70%.
 ```{r fig-conexiones-lectivas, fig.cap = "Conexiones: Internas vs Externas"}
 red_uv_v4 <- ip_network("147.156.0.0/16")
 red_uv_v6 <- ip_network("2001:720:1014::/48")
@@ -455,5 +455,28 @@ ggplot(logs_e6, aes(x = Horario, fill = Tipo_conexion)) +
   theme_minimal()
 ```
 
+Para tener una vista más clara de cuando son los patrones de mas conectividad, la Figura \@ref(fig:fig-historiograma-origen-dia) nos da mucha información.
 
+La gran parte del volumen de las conexiones se concentra entre las 10:00 y las 14:00 de la mañana. De las cuales, la mayoría son conexiones con origen del campus. Y es por las tardes cuando hay un pequeño volumen constante de conexiones externas al campus. 
+
+Domingos y sabados hay muy pocas conexiones y todas son externas.
+
+```{r fig-historiograma-origen-dia, fig.cap = "Historiogramas de conexiones por día de la semana.}
+logs_e6 <- logs_e6 %>%
+  mutate(NombreDia = wday(Hora, label = TRUE, abbr = FALSE, week_start = 1))
+
+ggplot(logs_e6, aes(x = factor(Horas), fill = Tipo_conexion)) +
+  geom_bar(position = "stack") +
+  facet_wrap(~NombreDia, ncol = 2) +
+  scale_x_discrete(breaks = as.character(seq(0, 23, by = 4))) +
+  scale_fill_manual(values = c("Interna (Campus)" = "#2E86C1", "Externa (Casa/Móvil)" = "#E67E22")) +
+  labs(
+    title = "Volumen de Actividad Semanal por Origen",
+    x = "Hora",
+    y = "Interacciones Totales",
+    fill = "Origen"
+  ) +
+  theme_light() +
+  theme(legend.position = "top", strip.background = element_rect(fill = "#5D6D7E"))
+```
 
