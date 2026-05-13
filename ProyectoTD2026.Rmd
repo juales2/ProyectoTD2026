@@ -279,6 +279,8 @@ ggplot(actividad_diasemana,
 
 - **Fines de semana:** la actividad cae de forma notable. El **sábado** es el día más inactivo de toda la semana con solo **4.707 eventos** (4,3 %), incluso por debajo del domingo (6.269, 5,8 %). A diferencia de los laborables, el pico horario se desplaza a las **13:00 h** (1.149 eventos) y la actividad se mantiene relativamente constante entre las 11:00 y las 23:00 h, sin el pronunciado pico de mediodía propio de los días de clase. Esto refleja un uso más autónomo y flexible de la plataforma cuando no hay clases presenciales.
 
+**Conclusión.**
+
 En conclusión, la actividad en el Aula Virtual está fuertemente condicionada por el calendario académico: los miércoles y viernes en la franja de 9:00 a 14:00 h concentran los mayores picos de uso, mientras que los fines de semana, especialmente el sábado, presentan una actividad mínima distribuida de forma más uniforme a lo largo del día. Lo más probable es que en el curso 24-25 los alumnos tubiesen las dos clases semanales de la asignatura los miercoles a las **9:00 h** y los viernes a las **11:30 h**.
 
 ------------------------------------------------------------------------
