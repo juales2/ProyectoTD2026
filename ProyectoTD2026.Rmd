@@ -1,17 +1,18 @@
 ---
 title: "ProyectoTD2026"
+subtitle: "Análisis de registros en Moodle"
 author: "Andrea Vandirek Romero, Julián Alcázar Escobedo, Jalal Imrani Mangat, Carmela Lorente, Mario Juan Moya"
 date: "2026-04-15"
 output: 
   bookdown::html_document2: default
   bookdown::pdf_document2: default
-editor_options: 
-  markdown: 
-    wrap: 72
+  theme: lumen
+  number_sections: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, 
+  warning = FALSE, fig.align = "center")
 
 # Carga de librerías
 if (!require("pacman"))
@@ -175,7 +176,7 @@ kable(head(logs, 5), caption = "Muestra de los primeros 5 registros de actividad
 
 ------------------------------------------------------------------------
 
-## Pregunta 1: Picos de actividad. ¿Cuál es el horario de máxima actividad y cómo varía entre días laborables y fines de semana?
+## Pregunta 1: Picos de actividad. ¿Cuál es el horario de máxima actividad y cómo varía entre días laborables y fines de semana? {-}
 
 Para responder a esta pregunta, clasificamos cada registro del curso
 académico 2024-2025 según la hora del día (franja horaria de 0 a 23) y
@@ -363,7 +364,7 @@ viernes a las **11:30 h**.
 
 ------------------------------------------------------------------------
 
-## Pregunta 2: ¿Existe una relación entre las consultas de material y el número de entregas?
+## Pregunta 2: ¿Existe una relación entre las consultas de material y el número de entregas? {-}
 
 Para encontrar la respuesta a esta pregunta, debemos calcular para cada
 usuario el número de eventos vinculados a la visualización o descarga de
@@ -403,11 +404,10 @@ relacion_consultas_entregas <- logs_estudiante %>%
 
 ```
 
-En la Tabla \@ref(tab:tabla_de_relacion_entre_consultas_entregas) se
-muestran los 10 primeros usuarios con más entregas realizadas en el
-curso 2024-2025.
 
-```{r tabla_de_relacion_entre_consultas_entregas, message=FALSE, warning=FALSE}
+En la Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas) se muestran los 10 primeros usuarios con más entregas realizadas en el curso 2024-2025.
+
+```{r tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas}
 relacion_consultas_entregas %>%
   arrange(desc(Total_Entregas)) %>%
   head(10) %>%
@@ -421,7 +421,8 @@ las entregas realizadas. El gráfico incluye una línea de ajuste lineal
 que permite visualizar la dependencia estadística existente en la
 muestra analizada.
 
-```{r grafico_correlacion_consultas_entregas, message=FALSE, warning=FALSE}
+
+```{r grafico-correlacion-consultas-entregas, fig.cap= "Relación entre consultas y entregas."}
 correlacion_valor <- cor(relacion_consultas_entregas$Total_Consultas, 
                          relacion_consultas_entregas$Total_Entregas, 
                          method = "pearson")
@@ -469,16 +470,16 @@ observaciones clave:
     entregables.
 
 -   **Comportamiento de los usuarios activos**: Según se observa en la
-    Tabla @ref(tab:tabla_de_relacion_entre_consultas_entregas), los 10
+    Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas),los 10
     primeros alumnos con más entregas registra también volúmenes de
     consulta significativamente altos. No obstante, el diagrama de
-    dispersión (Figura @ref(fig:grafico_correlacion_consultas_entregas))
+    dispersión (Figura \@ref(fig:grafico-correlacion-consultas-entregas))
     revela una alta densidad de puntos en la zona baja-izquierda,
     indicando que un grupo considerable de alumnos mantiene un nivel de
     actividad mínimo en ambos parámetros.
 
 -   **Tendencia lineal**: La línea de ajuste (rojo oscuro) en la Figura
-    @ref(fig:grafico_correlacion_consultas_entregas) muestra una
+    \@ref(fig:grafico-correlacion-consultas-entregas) muestra una
     pendiente ascendente clara. La dispersión de los puntos respecto a
     esta línea sugiere que, si bien la consulta de materiales es un
     predictor del éxito en las entregas, existen perfiles atípicos
@@ -487,25 +488,15 @@ observaciones clave:
 
 **Conclusión.**
 
-En resumen, existe una dependencia estadística directa entre la consulta
-de recursos y la realización de entregas en el Aula Virtual. Este patrón
-sugiere que el éxito en la progresión del curso está estrechamente
-vinculado al compromiso previo con el material de estudio. Los datos
-demuestran que los estudiantes más activos en la plataforma no solo se
-limitan a subir las tareas, sino que consumen de manera mucho más
-elevada los recursos disponibles, lo que subraya la importancia de
-mantener un repositorio de materiales accesible y bien estructurado para
-fomentar la participación estudiantil. No obstante, no podemos olvidar
-que la correlación no implica causalidad. Esta distinción se evidencia
-en la presencia de un grupo de estudiantes que, pese a registrar un bajo
-número de consultas, completaron un volumen elevado de entregas. Este
-hallazgo plantea una nueva pregunta: determinar si existe una diferencia
-significativa en el las calificaciones entre estos perfiles y aquellos
-que interactúan con el material de forma más frecuente.
+
+En resumen, existe una dependencia estadística directa entre la consulta de recursos y la realización de entregas en el Aula Virtual. Este patrón sugiere que el éxito en la progresión del curso está estrechamente vinculado al compromiso previo con el material de estudio. Los datos demuestran que los estudiantes más activos en la plataforma no solo se limitan a subir las tareas, sino que consumen de manera mucho más elevada los recursos disponibles, lo que subraya la importancia de mantener un repositorio de materiales accesible y bien estructurado para fomentar la participación estudiantil. 
+
+No obstante, no podemos olvidar que la correlación no implica causalidad. Esta distinción se evidencia en la presencia de un grupo de estudiantes que, pese a registrar un bajo número de consultas, completaron un volumen elevado de entregas. Este hallazgo plantea una nueva pregunta: determinar si existe una diferencia significativa en el las calificaciones entre estos perfiles y aquellos que interactúan con el material de forma más frecuente.
+
 
 ------------------------------------------------------------------------
 
-## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C)
+## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C) {-}
 
 ```{r recursos-menos-vistos}
 # Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
@@ -600,6 +591,7 @@ recursos_top10 %>%
 La Figura \@ref(fig:fig-recursos-impacto) representa visualmente los
 materiales más utilizados por el alumnado.
 
+<<<<<<< HEAD
 ```{r}
 ggplot(recursos_top10,
        aes(x = reorder(Recurso, Interacciones),
@@ -666,6 +658,9 @@ para el profesorado a la hora de identificar temas especialmente
 complejos o recursos que generan mayor implicación del alumnado.
 
 ## Pregunta 6: Patrones de conectividad
+=======
+## Pregunta 6: Patrones de conectividad {-}
+>>>>>>> e2211e4267ba8e05d362112dfe8ee2ab6597da90
 
 El análisis de la procedencia de las conexiones es fundamental para
 entender el comportamiento del alumnado y la utilidad de las
