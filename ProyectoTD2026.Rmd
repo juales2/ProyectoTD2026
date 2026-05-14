@@ -298,19 +298,19 @@ Para saber cuales son los eventos de consultas o de entregas hay que hacer un an
 Una vez clasificados, se aplicará una función de agregación para calcular la suma de ambos tipos de eventos por cada identificador de usuario único.
 El análisis se centra exclusivamente en el alumnado de la asignatura. En consecuencia, se excluyen los registros correspondientes al profesorado. Estos perfiles se identificaron mediante la detección de eventos de acceso restringidos para los estudiantes.
 
-```{r consultas-vs-entregas-tabla}
+```{r consultas-vs-entregas-tabla, message=FALSE, warning=FALSE}
 #visualizamos todos los diferentes tipos de eventos
 #unique(logs$`Nombre evento`)
 consultas <- c('visto|vista|visualizado|visualizada|visitado|visitado|descargado|descargada')
 entregas <- c('enviado|subida|subido|enviadas|enviada')
 eventos_profesor <- "calificar|Informe de registro|matriculado"
 
-profesores <- logs %>% filter(str_detect(`Nombre evento`, 
+profesores <- curso_2025 %>% filter(str_detect(`Nombre evento`, 
                                               pattern = regex(eventos_profesor, ignore_case = TRUE))) %>%
   distinct(`Nombre completo del usuario`) %>%
   pull(`Nombre completo del usuario`)
 
-logs_estudiante <- logs %>% filter(!(`Nombre completo del usuario` %in% profesores))
+logs_estudiante <- curso_2025 %>% filter(!(`Nombre completo del usuario` %in% profesores))
 
 relacion_consultas_entregas <- logs_estudiante %>% 
   group_by(`Nombre completo del usuario`) %>%
@@ -325,8 +325,8 @@ relacion_consultas_entregas <- logs_estudiante %>%
 
 ```{r tabla de relacion entre consultas_entregas}
 relacion_consultas_entregas %>%
-  arrange(desc(Total_Entregas)) %>%
-  kable(caption = "Usuarios con mayor número de entregas") %>%
+  arrange(head(desc(Total_Entregas), 10)) %>%
+  kable(caption = "Top 10 usuarios con mayor número de entregas") %>%
   kable_styling(bootstrap_options = c("hover", "responsive"), full_width = FALSE)
 ```
 
