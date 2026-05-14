@@ -401,6 +401,15 @@ relacion_consultas_entregas <- logs_estudiante %>%
     Total_Consultas = sum(str_detect(`Nombre evento`, pattern = regex(consultas, ignore_case = TRUE))),
     .groups = 'drop')
 
+max_entregas <- max(relacion_consultas_entregas$Total_Entregas)
+max_consultas <- max(relacion_consultas_entregas$Total_Consultas)
+media_entregas <- mean(relacion_consultas_entregas$Total_Entregas)
+media_consultas <- mean(relacion_consultas_entregas$Total_Consultas)
+
+cat("El máximo de entregas realizado por un estudiante es:", max_entregas, "\n")
+cat("El máximo de consultas realizado por un estudiante es:", max_consultas, "\n")
+cat("El promedio de entregas por alumno es:", round(media_entregas, 2), "\n")
+cat("El promedio de consultas por alumno es:", round(media_consultas, 2), "\n")
 ```
 
 
