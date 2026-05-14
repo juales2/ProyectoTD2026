@@ -442,7 +442,7 @@ ggplot(relacion_consultas_entregas, aes(y = Total_Entregas, x = Total_Consultas)
 ```
 
 Inicialmente se consideró el uso de la función ggpairs() para
-representar la matriz de correlación entre ambas variables. No obstante,
+representar la matriz de correlación entre ambas variables. Sin embargo,
 dada la elevada densidad de los registros y la disparidad en los rangos
 de los datos del archivo original, dicha visualización resultaba confusa
 y dificultaba la interpretación de los resultados. Por eso, se optó por
