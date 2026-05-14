@@ -541,7 +541,7 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
 
 ```
 
-## Pregunta 5: **Recursos de alto impacto**
+## Pregunta 5: **Recursos de alto impacto** {-}
 
 #### ¿Qué materiales generan el mayor volumen de interacción y qué indica esto sobre el interés o la dificultad de los contenidos?
 
@@ -573,7 +573,7 @@ recursos_top10
 
 ```
 
-La Tabla @ref(tab:tabla-recursos-impacto) muestra los diez recursos con
+La Tabla \@ref(tab:tabla-recursos-impacto) muestra los diez recursos con
 mayor volumen de interacción durante el curso.
 
 ```{r}
@@ -658,10 +658,7 @@ esfuerzo adicional de comprensión o revisión. Esto puede resultar útil
 para el profesorado a la hora de identificar temas especialmente
 complejos o recursos que generan mayor implicación del alumnado.
 
-## Pregunta 6: Patrones de conectividad
-=======
 ## Pregunta 6: Patrones de conectividad {-}
->>>>>>> e2211e4267ba8e05d362112dfe8ee2ab6597da90
 
 El análisis de la procedencia de las conexiones es fundamental para
 entender el comportamiento del alumnado y la utilidad de las
