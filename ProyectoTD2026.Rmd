@@ -600,6 +600,71 @@ recursos_top10 %>%
 La Figura \@ref(fig:fig-recursos-impacto) representa visualmente los
 materiales más utilizados por el alumnado.
 
+```{r}
+ggplot(recursos_top10,
+       aes(x = reorder(Recurso, Interacciones),
+           y = Interacciones)) +
+  geom_col() +
+  coord_flip() +
+  geom_text(aes(label = scales::comma(Interacciones)),
+            hjust = -0.1,
+            size = 3) +
+  scale_y_continuous(labels = scales::comma,
+                     expand = expansion(mult = c(0, 0.1))) +
+  labs(
+    title = "Recursos con mayor volumen de interacción",
+    subtitle = "Curso académico 2024-2025",
+    x = NULL,
+    y = "Número de interacciones"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+El análisis muestra que las actividades evaluables concentran la mayor
+parte de la interacción del alumnado. El recurso más utilizado es el
+**Cuestionario Global de la Asignatura**, con aproximadamente **4.652
+interacciones**, seguido del **Control de Asistencia Online** con
+**3.637 eventos**. Ambos recursos destacan claramente sobre el resto, lo
+que indica que las actividades relacionadas con evaluación y seguimiento
+obligatorio generan una participación intensiva.
+
+También presentan una elevada actividad distintos cuestionarios
+temáticos como **Cuestionario Tema 5** (2.083 interacciones),
+**Cuestionario Tema 1** (1.663) y **Cuestionario Tema 2** (1.515). Esto
+sugiere que los cuestionarios no solo fueron utilizados como método de
+evaluación, sino también como herramienta de repaso y autoaprendizaje.
+
+En cuanto a las tareas prácticas, destacan especialmente:
+
+-   **Examen Laboratorio TD 1ª Convocatoria 2025** (2.052 interacciones)
+
+-   **Práctica 1: Importación - Tarea** (1.979)
+
+-   **Práctica 4. Entrega de ejercicios** (1.938)
+
+-   **Práctica 2. Visualización** (1.585)
+
+-   **Práctica 3: Entrega de ejercicios** (1.578)
+
+Además, las tareas asociadas a plataformas externas como **Datacamp**
+también muestran una actividad considerable, lo que refleja una
+participación activa en actividades complementarias de aprendizaje
+autónomo.
+
+**Conclusión.**
+
+En conclusión, los recursos de mayor impacto dentro del Aula Virtual son
+aquellos vinculados a evaluación, cuestionarios y prácticas entregables.
+La alta interacción observada en estos materiales sugiere que el
+alumnado concentra su actividad principalmente en recursos evaluables o
+percibidos como importantes para el seguimiento de la asignatura.
+
+Asimismo, la repetición de accesos en determinadas prácticas y
+cuestionarios podría indicar que algunos contenidos requirieron un
+esfuerzo adicional de comprensión o revisión. Esto puede resultar útil
+para el profesorado a la hora de identificar temas especialmente
+complejos o recursos que generan mayor implicación del alumnado.
+
 ## Pregunta 6: Patrones de conectividad
 
 El análisis de la procedencia de las conexiones es fundamental para
