@@ -404,13 +404,8 @@ relacion_consultas_entregas <- logs_estudiante %>%
 
 ```
 
-<<<<<<< HEAD
+
 En la Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas) se muestran los 10 primeros usuarios con más entregas realizadas en el curso 2024-2025.
-=======
-En la Tabla \@ref(tab:tabla_de_relacion_entre_consultas_entregas) se
-muestran los 10 primeros usuarios con más entregas realizadas en el
-curso 2024-2025.
->>>>>>> 74d4ba49546d6c458b65c7252ee99b7bf9ff24e1
 
 ```{r tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas}
 relacion_consultas_entregas %>%
@@ -420,16 +415,12 @@ relacion_consultas_entregas %>%
   kable_styling(bootstrap_options = c("hover", "responsive"), full_width = FALSE)
 ```
 
-<<<<<<< HEAD
-
-La Figura \@ref(fig:grafico-correlacion-consultas-entregas) representa el análisis de correlación de Pearson entre las consultas de recursos y las entregas realizadas. El gráfico incluye una línea de ajuste lineal que permite visualizar la dependencia estadística existente en la muestra analizada.
-=======
 La Figura \@ref(fig:grafico_correlacion_consultas_entregas) representa
 el análisis de correlación de Pearson entre las consultas de recursos y
 las entregas realizadas. El gráfico incluye una línea de ajuste lineal
 que permite visualizar la dependencia estadística existente en la
 muestra analizada.
->>>>>>> 74d4ba49546d6c458b65c7252ee99b7bf9ff24e1
+
 
 ```{r grafico-correlacion-consultas-entregas, fig.cap= "Relación entre consultas y entregas."}
 correlacion_valor <- cor(relacion_consultas_entregas$Total_Consultas, 
@@ -451,11 +442,6 @@ ggplot(relacion_consultas_entregas, aes(y = Total_Entregas, x = Total_Consultas)
   )
 ```
 
-<<<<<<< HEAD
-
-
-**Interpretación.** El análisis de la relación entre la actividad de consulta y el cumplimiento de entregas permite extraer las siguientes observaciones clave:
-=======
 Inicialmente se consideró el uso de la función ggpairs() para
 representar la matriz de correlación entre ambas variables. No obstante,
 dada la elevada densidad de los registros y la disparidad en los rangos
@@ -466,17 +452,11 @@ correlación de Pearson para evaluar la relación lineal entre el número
 de consultas y de entregas. Los resultados revelan una correlación
 positiva significativa entre ambas variables. Cuanto más material
 consultan los alumnos, más tareas entregan generalmente.
->>>>>>> 74d4ba49546d6c458b65c7252ee99b7bf9ff24e1
 
 **Interpretación.** El análisis de la relación entre la actividad de
 consulta y el cumplimiento de entregas permite extraer las siguientes
 observaciones clave:
 
-<<<<<<< HEAD
-- **Comportamiento de los usuarios activos**: Según se observa en la Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas), los 10 primeros alumnos con más entregas registra también volúmenes de consulta significativamente altos. No obstante, el diagrama de dispersión (Figura \@ref(fig:grafico-correlacion-consultas-entregas)) revela una alta densidad de puntos en la zona baja-izquierda, indicando que un grupo considerable de alumnos mantiene un nivel de actividad mínimo en ambos parámetros.
-
-- **Tendencia lineal**: La línea de ajuste (rojo oscuro) en la Figura \@ref(fig:grafico-correlacion-consultas-entregas) muestra una pendiente ascendente clara. La dispersión de los puntos respecto a esta línea sugiere que, si bien la consulta de materiales es un predictor del éxito en las entregas, existen perfiles atípicos (outliers) que logran realizar las entregas con un número reducido de consultas previas o viceversa.
-=======
 -   **Intensidad de la relación**: El coeficiente de correlación de
     Pearson calculado es de **0.746**, lo que indica una correlación
     positiva fuerte. Esto confirma que ambas variables tienden a crecer
@@ -490,17 +470,16 @@ observaciones clave:
     entregables.
 
 -   **Comportamiento de los usuarios activos**: Según se observa en la
-    Tabla @ref(tab:tabla_de_relacion_entre_consultas_entregas), los 10
+    Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas),los 10
     primeros alumnos con más entregas registra también volúmenes de
     consulta significativamente altos. No obstante, el diagrama de
-    dispersión (Figura @ref(fig:grafico_correlacion_consultas_entregas))
+    dispersión (Figura \@ref(fig:grafico-correlacion-consultas-entregas))
     revela una alta densidad de puntos en la zona baja-izquierda,
     indicando que un grupo considerable de alumnos mantiene un nivel de
     actividad mínimo en ambos parámetros.
->>>>>>> 74d4ba49546d6c458b65c7252ee99b7bf9ff24e1
 
 -   **Tendencia lineal**: La línea de ajuste (rojo oscuro) en la Figura
-    @ref(fig:grafico_correlacion_consultas_entregas) muestra una
+    \@ref(fig:grafico-correlacion-consultas-entregas) muestra una
     pendiente ascendente clara. La dispersión de los puntos respecto a
     esta línea sugiere que, si bien la consulta de materiales es un
     predictor del éxito en las entregas, existen perfiles atípicos
@@ -509,36 +488,15 @@ observaciones clave:
 
 **Conclusión.**
 
-<<<<<<< HEAD
+
 En resumen, existe una dependencia estadística directa entre la consulta de recursos y la realización de entregas en el Aula Virtual. Este patrón sugiere que el éxito en la progresión del curso está estrechamente vinculado al compromiso previo con el material de estudio. Los datos demuestran que los estudiantes más activos en la plataforma no solo se limitan a subir las tareas, sino que consumen de manera mucho más elevada los recursos disponibles, lo que subraya la importancia de mantener un repositorio de materiales accesible y bien estructurado para fomentar la participación estudiantil. 
 
 No obstante, no podemos olvidar que la correlación no implica causalidad. Esta distinción se evidencia en la presencia de un grupo de estudiantes que, pese a registrar un bajo número de consultas, completaron un volumen elevado de entregas. Este hallazgo plantea una nueva pregunta: determinar si existe una diferencia significativa en el las calificaciones entre estos perfiles y aquellos que interactúan con el material de forma más frecuente.
 
-------------------------------------------------------------------------
-
-
-## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C) {-}
-=======
-En resumen, existe una dependencia estadística directa entre la consulta
-de recursos y la realización de entregas en el Aula Virtual. Este patrón
-sugiere que el éxito en la progresión del curso está estrechamente
-vinculado al compromiso previo con el material de estudio. Los datos
-demuestran que los estudiantes más activos en la plataforma no solo se
-limitan a subir las tareas, sino que consumen de manera mucho más
-elevada los recursos disponibles, lo que subraya la importancia de
-mantener un repositorio de materiales accesible y bien estructurado para
-fomentar la participación estudiantil. No obstante, no podemos olvidar
-que la correlación no implica causalidad. Esta distinción se evidencia
-en la presencia de un grupo de estudiantes que, pese a registrar un bajo
-número de consultas, completaron un volumen elevado de entregas. Este
-hallazgo plantea una nueva pregunta: determinar si existe una diferencia
-significativa en el las calificaciones entre estos perfiles y aquellos
-que interactúan con el material de forma más frecuente.
 
 ------------------------------------------------------------------------
 
 ## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C)
->>>>>>> 74d4ba49546d6c458b65c7252ee99b7bf9ff24e1
 
 ```{r recursos-menos-vistos}
 # Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
