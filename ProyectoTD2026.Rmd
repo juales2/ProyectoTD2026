@@ -334,6 +334,8 @@ relacion_consultas_entregas %>%
 ```
 
 
+La Figura \@ref(fig:grafico_correlacion_consultas_entregas) representa el análisis de correlación de Pearson entre las consultas de recursos y las entregas realizadas. El gráfico incluye una línea de ajuste lineal que permite visualizar la dependencia estadística existente en la muestra analizada.
+
 ```{r grafico_correlacion_consultas_entregas, message=FALSE, warning=FALSE}
 correlacion_valor <- cor(relacion_consultas_entregas$Total_Consultas, 
                          relacion_consultas_entregas$Total_Entregas, 
@@ -342,7 +344,7 @@ cat("La correlación entre las consultas y entregas es de :", correlacion_valor)
 
 #ggpairs(head(relacion_consultas_entregas, 10), title = "Matriz de Correlación") + theme_bw()
 
-ggplot(relacion_consultas_entregas, aes(x = Total_Entregas, y = Total_Consultas)) + 
+ggplot(relacion_consultas_entregas, aes(y = Total_Entregas, x = Total_Consultas)) + 
   geom_point(color = "red") +
   geom_smooth(method = "lm", color = "darkred", fill = "lightgray") +
   labs(
