@@ -325,7 +325,7 @@ relacion_consultas_entregas <- logs_estudiante %>%
 
 En la Tabla \@ref(tab:tabla de relacion entre consultas_entregas) se muestran los 10 primeros usuarios con más entregas realizadas en el curso 2024-2025.
 
-```{r tabla de relacion entre consultas_entregas}
+```{r tabla de relacion entre consultas_entregas, message=FALSE, warning=FALSE}
 relacion_consultas_entregas %>%
   arrange(desc(Total_Entregas)) %>%
   head(10) %>%
@@ -334,7 +334,7 @@ relacion_consultas_entregas %>%
 ```
 
 
-```{r grafico_correlacion_consultas_entregas}
+```{r grafico_correlacion_consultas_entregas, message=FALSE, warning=FALSE}
 correlacion_valor <- cor(relacion_consultas_entregas$Total_Consultas, 
                          relacion_consultas_entregas$Total_Entregas, 
                          method = "pearson")
