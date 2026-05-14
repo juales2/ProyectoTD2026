@@ -134,9 +134,10 @@ curso_2025 <- logs %>%
            Fecha <= as.Date("2025-08-31"))
 ```
 
+La Tabla \@ref(tab:tabla-logs) presenta una muestra de los 5 primeros registros del curso 2024-2025, proporcionando una referencia visual de la estructura de los datos objeto de estudio.
 
 ```{r tabla-logs}
-kable(head(logs, 10), caption = "Muestra de los primeros 10 registros de actividad.")
+kable(head(logs, 5), caption = "Muestra de los primeros 5 registros de actividad.")
 ```
 
 ------------------------------------------------------------------------
