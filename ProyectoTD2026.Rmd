@@ -1,14 +1,18 @@
 ---
 title: "ProyectoTD2026"
+subtitle: "Análisis de registros en Moodle"
 author: "Andrea Vandirek Romero, Julián Alcázar Escobedo, Jalal Imrani Mangat, Carmela Lorente, Mario Juan Moya"
 date: "2026-04-15"
 output: 
   bookdown::html_document2: default
   bookdown::pdf_document2: default
+  theme: lumen
+  number_sections: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, 
+  warning = FALSE, fig.align = "center")
 
 # Carga de librerías
 if (!require("pacman"))
@@ -323,9 +327,9 @@ relacion_consultas_entregas <- logs_estudiante %>%
 
 ```
 
-En la Tabla \@ref(tab:tabla_de_relacion_entre_consultas_entregas) se muestran los 10 primeros usuarios con más entregas realizadas en el curso 2024-2025.
+En la Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas) se muestran los 10 primeros usuarios con más entregas realizadas en el curso 2024-2025.
 
-```{r tabla_de_relacion_entre_consultas_entregas, message=FALSE, warning=FALSE}
+```{r tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas}
 relacion_consultas_entregas %>%
   arrange(desc(Total_Entregas)) %>%
   head(10) %>%
@@ -334,9 +338,9 @@ relacion_consultas_entregas %>%
 ```
 
 
-La Figura \@ref(fig:grafico_correlacion_consultas_entregas) representa el análisis de correlación de Pearson entre las consultas de recursos y las entregas realizadas. El gráfico incluye una línea de ajuste lineal que permite visualizar la dependencia estadística existente en la muestra analizada.
+La Figura \@ref(fig:grafico-correlacion-consultas-entregas) representa el análisis de correlación de Pearson entre las consultas de recursos y las entregas realizadas. El gráfico incluye una línea de ajuste lineal que permite visualizar la dependencia estadística existente en la muestra analizada.
 
-```{r grafico_correlacion_consultas_entregas, message=FALSE, warning=FALSE}
+```{r grafico-correlacion-consultas-entregas, fig.cap= "Relación entre consultas y entregas."}
 correlacion_valor <- cor(relacion_consultas_entregas$Total_Consultas, 
                          relacion_consultas_entregas$Total_Entregas, 
                          method = "pearson")
@@ -362,9 +366,9 @@ Los resultados revelan una correlación positiva significativa entre ambas varia
 
 - **Intensidad de la relación**: El coeficiente de correlación de Pearson calculado es de **0.746**, lo que indica una correlación positiva fuerte. Esto confirma que ambas variables tienden a crecer de forma conjunta. A medida que aumenta la interacción con los materiales didácticos incrementa también el número de tareas enviadas. Esto sugiere que los estudiantes con mayor nivel de actividad y revisión constante de materiales se preparan de manera más exhaustiva para las evaluaciones, lo que sugiere que una interacción constante con el material didáctico se traduce en un mayor compromiso y efectividad en la resolución de las tareas entregables.
 
-- **Comportamiento de los usuarios activos**: Según se observa en la Tabla @ref(tab:tabla_de_relacion_entre_consultas_entregas), los 10 primeros alumnos con más entregas registra también volúmenes de consulta significativamente altos. No obstante, el diagrama de dispersión (Figura @ref(fig:grafico_correlacion_consultas_entregas)) revela una alta densidad de puntos en la zona baja-izquierda, indicando que un grupo considerable de alumnos mantiene un nivel de actividad mínimo en ambos parámetros.
+- **Comportamiento de los usuarios activos**: Según se observa en la Tabla @ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas), los 10 primeros alumnos con más entregas registra también volúmenes de consulta significativamente altos. No obstante, el diagrama de dispersión (Figura @ref(fig:grafico-correlacion-consultas-entregas)) revela una alta densidad de puntos en la zona baja-izquierda, indicando que un grupo considerable de alumnos mantiene un nivel de actividad mínimo en ambos parámetros.
 
-- **Tendencia lineal**: La línea de ajuste (rojo oscuro) en la Figura @ref(fig:grafico_correlacion_consultas_entregas) muestra una pendiente ascendente clara. La dispersión de los puntos respecto a esta línea sugiere que, si bien la consulta de materiales es un predictor del éxito en las entregas, existen perfiles atípicos (outliers) que logran realizar las entregas con un número reducido de consultas previas o viceversa.
+- **Tendencia lineal**: La línea de ajuste (rojo oscuro) en la Figura @ref(fig:grafico-correlacion-consultas-entregas) muestra una pendiente ascendente clara. La dispersión de los puntos respecto a esta línea sugiere que, si bien la consulta de materiales es un predictor del éxito en las entregas, existen perfiles atípicos (outliers) que logran realizar las entregas con un número reducido de consultas previas o viceversa.
 
 
 **Conclusión.**
