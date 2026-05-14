@@ -416,7 +416,7 @@ relacion_consultas_entregas %>%
   kable_styling(bootstrap_options = c("hover", "responsive"), full_width = FALSE)
 ```
 
-La Figura \@ref(fig:grafico_correlacion_consultas_entregas) representa
+La Figura \@ref(fig:grafico-correlacion-consultas-entregas) representa
 el análisis de correlación de Pearson entre las consultas de recursos y
 las entregas realizadas. El gráfico incluye una línea de ajuste lineal
 que permite visualizar la dependencia estadística existente en la
