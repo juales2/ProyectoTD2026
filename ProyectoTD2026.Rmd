@@ -504,7 +504,7 @@ No obstante, no podemos olvidar que la correlación no implica causalidad. Esta 
 
 ------------------------------------------------------------------------
 
-## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? {-}
+## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo?
 
 ```{r recursos-menos-vistos}
 # Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
@@ -539,15 +539,31 @@ recursos_criticos <- recursos_especificos %>%
 ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Clicks), y = Clicks)) +
   geom_col(fill = "hotpink") +
   coord_flip() +
+  scale_x_discrete(labels = scales::label_wrap(width = 30)) + #modifico las etiwuetas de la Y porque una de ellas es muy larga y empeora la visión general
   labs(
     title = "Top 10 Recursos con menos interaccion",
     subtitle = "Recursos que podrían eliminarse o reubicarse mejor",
     x = "Nombre del Recurso",
     y = "Núm. de clicks"
   ) + theme_minimal()
+  
 
 ```
 
+**Interpretación.**
+
+      Al analizar la cuestión sobre los recursos menos interactuados (lo restringimos a un total de 10 recursos, donde los recursos con menor interacción se encuentran en un umbral de menos de clicks o accesos), vemos que hay una gran disparidad entre los de alto impacto ( de incluso miles de clicks por encima). 
+
+        Por un lado aparecen recursos borrados que indican que ya no están disponibles y por tanto, los accesos se limitan a los hechos con anterioridad. No tiene tanto que ver con el acceso del propio alumno por decisión, sino del sistema y la limpieza llevada a cabo por los responsables de la asignatura o del Aula Virtual.
+
+      También tenemos recursos que son meramente informativos, como el protocolo de la universidad, en los que generalmente los alumnos solo necesitan entrar inicialmente o puntualmente. De la misma manera ocurre con los recursos de evaluación, como puede ser el Kahoot "cangrejo" o la práctica E que aparecen en la gráfica, donde es coherente que solo se acceda la vez que va a ser evaluado dicho alumno.
+
+      Por último, cabe destacar la diferencia de uso de los boletines, ya que aparecen como intrautilizados el 2, 4 y 5. Esto puede significar que se ha trabajado de manera más dinamica en clase y no ha hecho falta acceder tanto al recurso, o que el interés en los ejercicios prácticos decae si no tienen quehacer una entrega.
+
+**Conclusión.**
+
+      En conclusión, existe una cantidad considerable de recursos en el Aula Virtual que ocupan espacio y pueden generar ruido vistual sin que vayan a ser usados realmente por la mayoría del alumnado. También vemos que las evaluaciones entregables hacen que el uso de los boletines varíe en comparación a si no las hay. 
+      Para optimizar el espacio, quizás podría plantearse al equipo docente responsable hacer una evaluación sobre el material disponible en la web y tratar de integrar los documentos más informativos donde están los documentos más frecuentados, o en los avisos. De esta manera, se mejoraría la limpieza de la asignatura en la web y la eficiencia de los materiales colgados para enfocarlos específicamente en los que realmente generan interés y mejoran el rendimiento de nuestro alumnado.
 
 ------------------------------------------------------------------------
 
