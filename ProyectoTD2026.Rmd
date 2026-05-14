@@ -496,7 +496,7 @@ No obstante, no podemos olvidar que la correlación no implica causalidad. Esta 
 
 ------------------------------------------------------------------------
 
-## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C)
+## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C) {-}
 
 ```{r recursos-menos-vistos}
 # Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
