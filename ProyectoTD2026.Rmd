@@ -134,6 +134,7 @@ curso_2025 <- logs %>%
            Fecha <= as.Date("2025-08-31"))
 ```
 
+
 ```{r tabla-logs}
 kable(head(logs, 10), caption = "Muestra de los primeros 10 registros de actividad.")
 ```
@@ -321,11 +322,12 @@ relacion_consultas_entregas <- logs_estudiante %>%
 
 ```
 
-
+En la Tabla \@ref(tab:tabla de relacion entre consultas_entregas) se muestran los 10 primeros usuarios con más entregas realizadas en el curso 2024-2025.
 
 ```{r tabla de relacion entre consultas_entregas}
 relacion_consultas_entregas %>%
-  arrange(head(desc(Total_Entregas), 10)) %>%
+  arrange(desc(Total_Entregas)) %>%
+  head(10) %>%
   kable(caption = "Top 10 usuarios con mayor número de entregas") %>%
   kable_styling(bootstrap_options = c("hover", "responsive"), full_width = FALSE)
 ```
@@ -400,7 +402,7 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
 ```
 
 
-# Pregunta 6: Patrones de conectividad
+## Pregunta 6: Patrones de conectividad
 ***
 
 El análisis de la procedencia de las conexiones es fundamental para entender el comportamiento del alumnado y la utilidad de las infraestructuras universitarias. En esta sección, nos proponemos investigar en qué medida predomina el acceso desde la red interna de la universidad (LAN/WiFi eduroam) frente a conexiones externas (hogares o redes móviles) durante el horario lectivo.
