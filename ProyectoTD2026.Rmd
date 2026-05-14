@@ -146,7 +146,7 @@ kable(head(logs, 5), caption = "Muestra de los primeros 5 registros de actividad
 
 ------------------------------------------------------------------------
 
-## Pregunta 1: Picos de actividad. ¿Cuál es el horario de máxima actividad y cómo varía entre días laborables y fines de semana?
+## Pregunta 1: Picos de actividad. ¿Cuál es el horario de máxima actividad y cómo varía entre días laborables y fines de semana? {-}
 
 Para responder a esta pregunta, clasificamos cada registro del curso académico 2024-2025 según la hora del día (franja horaria de 0 a 23) y el tipo de día (laborable de lunes a viernes, o fin de semana sábado y domingo). A continuación, contamos el número de eventos por franja horaria y tipo de día para identificar los picos de actividad.
 
@@ -295,7 +295,7 @@ En conclusión, la actividad en el Aula Virtual está fuertemente condicionada p
 
 ------------------------------------------------------------------------
 
-## Pregunta 2: ¿Existe una relación entre las consultas de material y el número de entregas?
+## Pregunta 2: ¿Existe una relación entre las consultas de material y el número de entregas? {-}
 
 Para encontrar la respuesta a esta pregunta, debemos calcular para cada usuario el número de eventos vinculados a la
 visualización o descarga de recursos (`Total_Consultas`) y el número de entregas realizadas (`Total_Entregas`).
@@ -362,24 +362,27 @@ ggplot(relacion_consultas_entregas, aes(y = Total_Entregas, x = Total_Consultas)
 Inicialmente se consideró el uso de la función ggpairs() para representar la matriz de correlación entre ambas variables. No obstante, dada la elevada densidad de los registros y la disparidad en los rangos de los datos del archivo original, dicha visualización resultaba confusa y dificultaba la interpretación de los resultados. Por eso, se optó por un diagrama de dispersión con anotaciones, usando el coeficiente de correlación de Pearson para evaluar la relación lineal entre el número de consultas y de entregas.
 Los resultados revelan una correlación positiva significativa entre ambas variables. Cuanto más material consultan los alumnos, más tareas entregan generalmente.
 
+
+
 **Interpretación.** El análisis de la relación entre la actividad de consulta y el cumplimiento de entregas permite extraer las siguientes observaciones clave:
 
 - **Intensidad de la relación**: El coeficiente de correlación de Pearson calculado es de **0.746**, lo que indica una correlación positiva fuerte. Esto confirma que ambas variables tienden a crecer de forma conjunta. A medida que aumenta la interacción con los materiales didácticos incrementa también el número de tareas enviadas. Esto sugiere que los estudiantes con mayor nivel de actividad y revisión constante de materiales se preparan de manera más exhaustiva para las evaluaciones, lo que sugiere que una interacción constante con el material didáctico se traduce en un mayor compromiso y efectividad en la resolución de las tareas entregables.
 
-- **Comportamiento de los usuarios activos**: Según se observa en la Tabla @ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas), los 10 primeros alumnos con más entregas registra también volúmenes de consulta significativamente altos. No obstante, el diagrama de dispersión (Figura @ref(fig:grafico-correlacion-consultas-entregas)) revela una alta densidad de puntos en la zona baja-izquierda, indicando que un grupo considerable de alumnos mantiene un nivel de actividad mínimo en ambos parámetros.
+- **Comportamiento de los usuarios activos**: Según se observa en la Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas), los 10 primeros alumnos con más entregas registra también volúmenes de consulta significativamente altos. No obstante, el diagrama de dispersión (Figura \@ref(fig:grafico-correlacion-consultas-entregas)) revela una alta densidad de puntos en la zona baja-izquierda, indicando que un grupo considerable de alumnos mantiene un nivel de actividad mínimo en ambos parámetros.
 
-- **Tendencia lineal**: La línea de ajuste (rojo oscuro) en la Figura @ref(fig:grafico-correlacion-consultas-entregas) muestra una pendiente ascendente clara. La dispersión de los puntos respecto a esta línea sugiere que, si bien la consulta de materiales es un predictor del éxito en las entregas, existen perfiles atípicos (outliers) que logran realizar las entregas con un número reducido de consultas previas o viceversa.
+- **Tendencia lineal**: La línea de ajuste (rojo oscuro) en la Figura \@ref(fig:grafico-correlacion-consultas-entregas) muestra una pendiente ascendente clara. La dispersión de los puntos respecto a esta línea sugiere que, si bien la consulta de materiales es un predictor del éxito en las entregas, existen perfiles atípicos (outliers) que logran realizar las entregas con un número reducido de consultas previas o viceversa.
 
 
 **Conclusión.**
 
 En resumen, existe una dependencia estadística directa entre la consulta de recursos y la realización de entregas en el Aula Virtual. Este patrón sugiere que el éxito en la progresión del curso está estrechamente vinculado al compromiso previo con el material de estudio. Los datos demuestran que los estudiantes más activos en la plataforma no solo se limitan a subir las tareas, sino que consumen de manera mucho más elevada los recursos disponibles, lo que subraya la importancia de mantener un repositorio de materiales accesible y bien estructurado para fomentar la participación estudiantil. 
+
 No obstante, no podemos olvidar que la correlación no implica causalidad. Esta distinción se evidencia en la presencia de un grupo de estudiantes que, pese a registrar un bajo número de consultas, completaron un volumen elevado de entregas. Este hallazgo plantea una nueva pregunta: determinar si existe una diferencia significativa en el las calificaciones entre estos perfiles y aquellos que interactúan con el material de forma más frecuente.
 
 ------------------------------------------------------------------------
 
 
-## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C)
+## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C) {-}
 
 ```{r recursos-menos-vistos}
 # Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
@@ -424,7 +427,7 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
 ```
 
 
-## Pregunta 6: Patrones de conectividad
+## Pregunta 6: Patrones de conectividad {-}
 
 El análisis de la procedencia de las conexiones es fundamental para entender el comportamiento del alumnado y la utilidad de las infraestructuras universitarias. En esta sección, nos proponemos investigar en qué medida predomina el acceso desde la red interna de la universidad (LAN/WiFi eduroam) frente a conexiones externas (hogares o redes móviles) durante el horario lectivo.
 
