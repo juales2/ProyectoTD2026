@@ -29,8 +29,6 @@ pacman::p_load(
   # Diseño de tablas
   ipaddress   # Manejo de IPs
 )
-
-
 ```
 
 ------------------------------------------------------------------------
@@ -102,7 +100,7 @@ AulaVirtual.
 
 ```{r}
 # Carga inicial del archivo de logs
-logs <- read_csv("data/logs_moodle_anon_test.csv", show_col_types = FALSE)
+logs <- read_csv("data/logs_moodle_anon.csv", show_col_types = FALSE)
 
 # Vista preliminar del dataset para analizar las variables y datos
 glimpse(logs)
@@ -359,7 +357,7 @@ condicionada por el calendario académico: los miércoles y viernes en la
 franja de 9:00 a 14:00 h concentran los mayores picos de uso, mientras
 que los fines de semana, especialmente el sábado, presentan una
 actividad mínima distribuida de forma más uniforme a lo largo del día.
-Lo más probable es que en el curso 24-25 los alumnos tubiesen las dos
+Lo más probable es que en el curso 24-25 los alumnos tuviesen las dos
 clases semanales de la asignatura los miercoles a las **9:00 h** y los
 viernes a las **11:30 h**.
 
@@ -497,7 +495,7 @@ No obstante, no podemos olvidar que la correlación no implica causalidad. Esta 
 
 ------------------------------------------------------------------------
 
-## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C) {-}
+## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? {-}
 
 ```{r recursos-menos-vistos}
 # Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
@@ -735,7 +733,7 @@ ggplot(logs_e6, aes(x = Horario, fill = Tipo_conexion)) +
 ```
 
 Para tener una vista más clara de cuando son los patrones de mas
-conectividad, la Figura \@ref(fig:fig-historiograma-origen-dia) nos da
+conectividad, la Figura \@ref(fig:fig-histograma-origen-dia) nos da
 mucha información.
 
 La gran parte del volumen de las conexiones se concentra entre las 10:00
@@ -745,7 +743,7 @@ constante de conexiones externas al campus.
 
 Domingos y sabados hay muy pocas conexiones y todas son externas.
 
-```{r fig-historiograma-origen-dia, fig.cap = "Historiogramas de conexiones por día de la semana."}
+```{r fig-histograma-origen-dia, fig.cap = "Histogramas de conexiones por día de la semana."}
 logs_e6 <- logs_e6 %>%
   mutate(NombreDia = wday(Hora, label = TRUE, abbr = FALSE, week_start = 1))
 
