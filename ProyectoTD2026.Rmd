@@ -412,6 +412,7 @@ cat("El promedio de entregas por alumno es:", round(media_entregas, 2), "\n")
 cat("El promedio de consultas por alumno es:", round(media_consultas, 2), "\n")
 ```
 
+Los resultados revelan una brecha de actividad significativa: mientras que el máximo de consultas registrado por un único usuario asciende a **2295** eventos, la media del grupo se sitúa en *825.4*, lo que indica una distribución de esfuerzo muy variada entre el alumnado. El promedio de *825.4* consultas por alumno frente a las casi **50** entregas de media sugiere que, por cada tarea completada, los estudiantes interactúan aproximadamente **16** veces con los recursos del aula. Esto indica que el material no solo se descarga, sino que se consulta de manera recurrente durante el proceso de aprendizaje. Con un promedio de casi *50* entregas por alumno, observamos un grupo muy comprometido y cohesionado. La cercanía entre la media y el máximo registrado confirma que el cumplimiento de las tareas no es algo aislado de unos pocos, sino la norma general entre los estudiantes.
 
 En la Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas) se muestran los 10 primeros usuarios con más entregas realizadas en el curso 2024-2025.
 
