@@ -548,9 +548,12 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
 
 ```
 
+
+------------------------------------------------------------------------
+
 ## Pregunta 5: **Recursos de alto impacto** {-}
 
-#### ¿Qué materiales generan el mayor volumen de interacción y qué indica esto sobre el interés o la dificultad de los contenidos?
+#### ¿Qué materiales generan el mayor volumen de interacción y qué indica esto sobre el interés o la dificultad de los contenidos? {-}
 
 Para responder a esta pregunta, analizamos el número total de eventos
 asociados a cada recursoEl objetivo es identificar qué materiales
@@ -583,7 +586,7 @@ recursos_top10
 La Tabla \@ref(tab:tabla-recursos-impacto) muestra los diez recursos con
 mayor volumen de interacción durante el curso.
 
-```{r}
+```{r tabla-recursos-impacto}
 recursos_top10 %>%
   mutate(Porcentaje = round(Interacciones / sum(recursos_interacciones$Interacciones) * 100, 2)) %>%
   rename(`Recurso o actividad` = Recurso,
@@ -599,8 +602,7 @@ recursos_top10 %>%
 La Figura \@ref(fig:fig-recursos-impacto) representa visualmente los
 materiales más utilizados por el alumnado.
 
-<<<<<<< HEAD
-```{r}
+```{r fig-recursos-impacto}
 ggplot(recursos_top10,
        aes(x = reorder(Recurso, Interacciones),
            y = Interacciones)) +
@@ -664,6 +666,8 @@ cuestionarios podría indicar que algunos contenidos requirieron un
 esfuerzo adicional de comprensión o revisión. Esto puede resultar útil
 para el profesorado a la hora de identificar temas especialmente
 complejos o recursos que generan mayor implicación del alumnado.
+
+------------------------------------------------------------------------
 
 ## Pregunta 6: Patrones de conectividad {-}
 
