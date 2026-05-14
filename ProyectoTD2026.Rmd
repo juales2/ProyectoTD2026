@@ -508,7 +508,8 @@ No obstante, no podemos olvidar que la correlación no implica causalidad. Esta 
 ## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo?
 
 ```{r recursos-menos-vistos}
-# Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
+
+# Primero agrupo por Componente y Nombre evento para ver, ¿qué se ignora?
 
 recursos_infrautilizados <- curso_2025 %>%
   group_by(Componente) %>%
@@ -517,7 +518,7 @@ recursos_infrautilizados <- curso_2025 %>%
     Usuarios_Unicos = n_distinct(`Nombre completo del usuario`)
   ) %>% arrange(Total_Interacciones)
 
-# Identificar recursos con cero clicks o visitas
+# Identifico recursos con cero clicks o visitas
 # necesitamos nombre del recurso, en columna Contexto del evento
 
 recursos_especificos <- curso_2025 %>%
@@ -529,13 +530,13 @@ recursos_especificos <- curso_2025 %>%
   ) %>%
   arrange(Clicks)
 
-# Definir un umbral de Baja interacción
+# Defino un umbral de Baja interaccion
 
 umbral_bajo = 5
 recursos_criticos <- recursos_especificos %>% 
   filter(Clicks < umbral_bajo)
 
-# Visualización de los 10 recursos menos utilizados
+# Elegimos visualizar un rango de los 10 recursos menos utilizados
 
 ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Clicks), y = Clicks)) +
   geom_col(fill = "hotpink") +
@@ -547,6 +548,7 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
     x = "Nombre del Recurso",
     y = "Núm. de clicks"
   ) + theme_minimal()
+  
   
 
 ```
