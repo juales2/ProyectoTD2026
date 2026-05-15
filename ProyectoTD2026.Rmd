@@ -508,7 +508,7 @@ ggplot(recursos_top10,
   theme_minimal(base_size = 12)
 ```
 
-El análisis muestra que las actividades evaluables concentran la mayor parte de la interacción del alumnado. El recurso más utilizado es el **Cuestionario Global de la Asignatura**, con aproximadamente **4.652 interacciones**, seguido del **Control de Asistencia Online** con **3.637 eventos**. Ambos recursos destacan claramente sobre el resto, lo que indica que las actividades relacionadas con evaluación y seguimiento obligatorio generan una participación intensiva.
+El análisis muestra que las actividades evaluables concentran la mayor parte de la interacción del alumnado. El recurso más utilizado es el **Cuestionario Global de la Asignatura**, con aproximadamente **4.651 interacciones**, seguido del **Control de Asistencia Online** con **3.625 eventos**. Ambos recursos destacan claramente sobre el resto, lo que indica que las actividades relacionadas con evaluación y seguimiento obligatorio generan una participación intensiva.
 
 También presentan una elevada actividad distintos cuestionarios temáticos como **Cuestionario Tema 5** (2.083 interacciones), **Cuestionario Tema 1** (1.663) y **Cuestionario Tema 2** (1.515). Esto sugiere que los cuestionarios no solo fueron utilizados como método de evaluación, sino también como herramienta de repaso y autoaprendizaje.
 
