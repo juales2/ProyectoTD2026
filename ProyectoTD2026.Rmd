@@ -147,9 +147,9 @@ abarcan los registros obtenidos.
 
 ```{r}
 resumen_temporal <- logs %>%
-  summarise(inicio = min(Fecha), fin = max(Fecha))
+  summarise(Inicio = min(Fecha), Fin = max(Fecha))
 
-print(resumen_temporal)
+kable(resumen_temporal, caption = "Franja temporal trabajada")
 ```
 
 Vemos que la actividad comienza en julio de 2024, antes del inicio del
@@ -711,8 +711,8 @@ investigar en qué medida predomina el acceso desde la red interna de la
 universidad (LAN/WiFi eduroam) frente a conexiones externas (hogares o
 redes móviles) durante el horario lectivo.
 
-Para ello, utilizaremos la librería **ipaddress** con el fin de
-clasificar cada registro de los logs.
+La tabla \@ref(tab:tabla-contador-ip) cuales son las direcciones
+IP más repetidas durante horario lectivo.
 
 ```{r tabla-contador-ip}
 contador_ips <- curso_2025 %>%
@@ -720,22 +720,13 @@ contador_ips <- curso_2025 %>%
   count(`Dirección IP`, sort = TRUE) %>% head(10)
 kable(contador_ips, caption = "Top 10 de direcciones IP más frecuentes en horario lectivo")
 ```
+La dirección IP con mas registros **2001:720:1014:88:0:0:a:6b7** pertenece a la infraestructura WIFI eduroam. En segundo lugar hay una IP que corresponde a una 
+compañía telefónica (Posiblemente se trate de una IP de un alumno muy aplicado o 
+una casa donde varias personas se conectan desde la misma red). Y la última 
+direccion IP con más diferencia de uso a todas las demás **147.156.86.41**, se 
+trata de la IP que utilizan los ordenadores de la universidad.
 
-Viendo la tabla \@ref(tab:tabla-contador-ip) cuales son las direcciones
-IP más repetidas durante horario lectivo podemos sacar varias
-conclusiones. La dirección IP con mas registros
-**2001:720:1014:88:0:0:a:6b7** lo que sugiere que sea la que corresponde
-a la infraestructura WiFi eduroam del campus. En segundo lugar hay una
-IP que corresponde a una compañía telefónica (Posiblemente se trate de
-una IP de un alumno muy aplicado o una casa donde varias personas se
-conectan desde la misma red). Y la última direccion IP con más
-diferencia de uso a todas las demás **147.156.86.41**, se trata de la IP
-que utilizan los ordenadores de la universidad.
-
-Este gráfico \@ref(fig:fig-conexiones-lectivas) muestra claramente que
-son muy pocas las conexiones internas fuera de horario lectivo. De la
-misma manera las conexiones internas en el horario lectivo son un poco
-mas del 70%.
+El gráfico \@ref(fig:fig-conexiones-lectivas) muestra la proporcion de conexiones internas y externas en horario lectivo.
 
 ```{r fig-conexiones-lectivas, fig.cap = "Conexiones: Internas vs Externas"}
 red_uv_v4 <- ip_network("147.156.0.0/16")
@@ -774,17 +765,14 @@ ggplot(logs_e6, aes(x = Horario, fill = Tipo_conexion)) +
   ) +
   theme_minimal()
 ```
+No todas las conexiones tienen asociadas una dirección IP. Por eso la suma de 
+los porcentajes no es igual a 100.
+
 
 Para tener una vista más clara de cuando son los patrones de mas
-conectividad, la Figura \@ref(fig:fig-histograma-origen-dia) nos da
-mucha información.
-
-La gran parte del volumen de las conexiones se concentra entre las 10:00
-y las 14:00 de la mañana. De las cuales, la mayoría son conexiones con
-origen del campus. Y es por las tardes cuando hay un pequeño volumen
-constante de conexiones externas al campus.
-
-Domingos y sabados hay muy pocas conexiones y todas son externas.
+conectividad, la Figura \@ref(fig:fig-histograma-origen-dia) que reptresenta 
+para cada día de la semana, la cantidad de conexiones internas o externas por 
+hora.
 
 ```{r fig-histograma-origen-dia, fig.cap = "Histogramas de conexiones por día de la semana."}
 logs_e6 <- logs_e6 %>%
@@ -804,3 +792,11 @@ ggplot(logs_e6, aes(x = factor(Horas), fill = Tipo_conexion)) +
   theme_light() +
   theme(legend.position = "top", strip.background = element_rect(fill = "#5D6D7E"))
 ```
+**Interpretación.** El analisis de las conexiones internas y externas durante 
+el horario de clase concluye en:
+
+-   **Horario lectivo:** La gran mayoría de las conexiones se producen en esta 
+    franja horaria. Poco más del 70% de los accesos provienen de la red interna.
+
+-   **Fuera de horario:** Aqui tenemos muchos menos accesos que en horario de 
+    clase. Poco más del 90% de las conexiones son externas.
