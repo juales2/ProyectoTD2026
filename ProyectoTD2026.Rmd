@@ -452,7 +452,7 @@ En primer lugar, agrupamos los registros por el contexto del evento y contabiliz
 
 ```{r}
 # Conteo de interacciones por recurso
-recursos_interacciones <- logs %>%
+recursos_interacciones <- curso_2025 %>%
   filter(!str_detect(`Contexto del evento`, regex("Curso:", ignore_case = TRUE))) %>%
   count(`Contexto del evento`, sort = TRUE) %>%
   rename(Recurso = `Contexto del evento`,
@@ -463,6 +463,11 @@ recursos_top10 <- recursos_interacciones %>%
   slice_max(order_by = Interacciones, n = 10)
 
 recursos_top10
+   
+
+
+
+
 
 ```
 
