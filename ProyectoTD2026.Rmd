@@ -396,7 +396,105 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
     x = "Nombre del Recurso",
     y = "Núm. de clicks"
   ) + theme_minimal()
+```
 
+
+## Pregunta 4: ¿Qué proporción de la actividad total del alumnado es consulta pasiva de materiales frente a participación activa en entregas y cuestionarios?
+```{r p4-datos, message=FALSE, warning=FALSE}
+
+consultas <- c('visto|vista|visualizado|visualizada|visitado|descargado|descargada')
+entregas   <- c('enviado|subida|subido|enviadas|enviada')
+cuestionarios <- c('intento|respondido|completado|calificado')
+eventos_profesor <- "calificar|Informe de registro|matriculado"
+
+profesores <- curso_2025 %>%
+  filter(str_detect(`Nombre evento`,
+                    regex(eventos_profesor, ignore_case = TRUE))) %>%
+  distinct(`Nombre completo del usuario`) %>%
+  pull(`Nombre completo del usuario`)
+
+logs_estudiante_p4 <- curso_2025 %>%
+  filter(!(`Nombre completo del usuario` %in% profesores))
+
+actividad_tipo <- logs_estudiante_p4 %>%
+  mutate(
+    Tipo = case_when(
+      str_detect(`Nombre evento`, regex(consultas,     ignore_case = TRUE)) ~ "Pasiva (Consulta)",
+      str_detect(`Nombre evento`, regex(entregas,      ignore_case = TRUE)) ~ "Activa (Entrega)",
+      str_detect(`Nombre evento`, regex(cuestionarios, ignore_case = TRUE)) ~ "Activa (Cuestionario)",
+      TRUE ~ "Otra"
+    )
+  ) %>%
+  filter(Tipo != "Otra")
+
+resumen_p4 <- actividad_tipo %>%
+  group_by(Tipo) %>%
+  summarise(Total = n(), .groups = "drop") %>%
+  mutate(Porcentaje = round(Total / sum(Total) * 100, 1))
+
+cat("Distribución de la actividad del alumnado:\n")
+print(resumen_p4)
+```
+
+
+
+```{r tabla-p4}
+resumen_p4 %>%
+  rename(`Tipo de actividad` = Tipo,
+         `Nº eventos`        = Total,
+         `Porcentaje (%)`    = Porcentaje) %>%
+  kable(caption = "Actividad pasiva frente a activa del alumnado (curso 2024-2025)") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE
+  )
+```
+
+```{r fig-p4-pastel, fig.cap="proporción de actividad pasiva (consulta) frente a activa (entregas y cuestionaríos) del alumnado durante el curso 2024-2025,"}
+
+ggplot(resumen_p4, aes(x = "", y = Total, fill = Tipo)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = paste0(Porcentaje, "%")),
+            position = position_stack(vjust = 0.5),
+            size = 4.5, fontface = "bold") +
+  scale_fill_manual(values = c(
+    "Pasiva (Consulta)"     = "#2E86C1",
+    "Activa (Entrega)"      = "#E67E22",
+    "Activa (Cuestionario)" = "#27AE60"
+  )) +
+  labs(
+    title    = "Actividad pasiva vs. activa en el Aula Virtual",
+    subtitle = "Curso académico 2024-2025",
+    fill     = "Tipo de actividad",
+    x = NULL, y = NULL
+  ) +
+  theme_void(base_size = 12) +
+  theme(legend.position = "right")
+```
+
+
+
+```{r fig-p4-barras, fig.cap="Volumen absoluto de eventos por tipo de actividad del alumnado durante el curso 2024-2025."}
+ggplot(resumen_p4, aes(x = reorder(Tipo, -Total), y = Total, fill = Tipo)) +
+  geom_col(width = 0.6, show.legend = FALSE) +
+  geom_text(aes(label = paste0(scales::comma(Total), "\n(", Porcentaje, "%)")),
+            vjust = -0.4, size = 3.5) +
+  scale_fill_manual(values = c(
+    "Pasiva (Consulta)"     = "#2E86C1",
+    "Activa (Entrega)"      = "#E67E22",
+    "Activa (Cuestionario)" = "#27AE60"
+  )) +
+  scale_y_continuous(labels = scales::comma,
+                     expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title    = "Volumen de actividad por tipo",
+    subtitle = "Curso académico 2024-2025",
+    x        = "Tipo de actividad",
+    y        = "Número de eventos"
+  ) +
+  theme_minimal(base_size = 12)
+```
 ```
 
 
