@@ -1,0 +1,580 @@
+---
+title: "ProyectoTD2026"
+author: "Andrea Vandirek Romero, Julián Alcázar Escobedo, Jalal Imrani Mangat, Carmela Lorente, Mario Juan Moya"
+date: "2026-04-15"
+output: 
+  bookdown::html_document2: default
+  bookdown::pdf_document2: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Carga de librerías
+if (!require("pacman"))
+  install.packages("pacman")
+pacman::p_load(
+  tidyverse,
+  # Incluye ggplot2 y dplyr
+  lubridate,
+  # Manejo de fechas
+  knitr,
+  # Tablas
+  kableExtra,
+  # Diseño de tablas
+  ipaddress   # Manejo de IPs
+)
+
+
+```
+
+------------------------------------------------------------------------
+
+**Proyecto Tratamiento de Datos 2026 — Grupo O**
+
+------------------------------------------------------------------------
+
+# Introducción
+
+El objetivo principal de este proyecto es realizar un análisis
+exploratorio de los registros de actividad (*logs*) dentro del Aula Virtual
+durante el curso académico 2024-2025 de la asignatura Tratamiento de los Datos.
+
+Los datos con los logs, donde la información sensible se ha anonimizado, 
+se encuentran en el fichero `logs_moodle_anon.csv.` A través de este estudio, 
+transformaremos los datos brutos del archivo `logs_moodle_anon.csv` en
+información relevante para identificar patrones de uso, recursos críticos y
+comportamientos del alumnado en la plataforma.
+
+## Preguntas de investigación
+
+Se plantean las siguientes cuatro preguntas que guiarán el análisis:
+
+1.  **Picos de actividad.** ¿Cuál es el horario de máxima actividad y cómo
+    varía entre días laborables y fines de semana?
+
+2.  **Correlación consultas–entregas.** ¿Existe una relación entre la
+    frecuencia de consulta de materiales y el número de entregas realizadas
+    por cada usuario?
+
+3.  **Optimización de recursos.** ¿Qué recursos o materiales presentan un
+    nivel de interacción nulo o muy bajo?
+
+4.  **Nivel de proactividad.** ¿Qué proporción de la actividad total del
+    alumnado es consulta pasiva de materiales frente a participación activa
+    en entregas y cuestionarios?
+    
+5.  **Recursos de alto impacto.** ¿Qué materiales generan el mayor volumen 
+    de interacción y qué indica esto sobre el interés o la dificultad de 
+    los contenidos?
+
+6.  **Patrones de conectividad.** ¿En qué medida predomina el acceso desde 
+    la red interna de la universidad frente a conexiones externas durante 
+    el horario de clase?
+
+# ¿Qué esperamos de este tratamiento/estudio de los datos?
+
+Con este tratamiento esperamos transformar los logs en métricas o patrones que permitan trocear la actividad por franjas horarias y tipos de día (laboral o festivo) para identificar los picos de uso, que nos serviria para poder elegir un horario donde la mayoria estuviesen disponibles para alguna actividad, por ejemplo. 
+
+Además, queriamos medir la proactividad y correlacionar el consumo de recursos con el rendimiento para que los profes puedan valorar que archivos subir para que sean utiles y eficaces y cuales solo llenan mas visualmente la pagina.
+
+Finalmente, queriamos hacer la limpieza de registros nulos y la detección de outliers para que el análisis de recursos menos utilizados no esté sesgado por los errores de registro,y que cada click que estudiemos represente una interacción real del alumnado con el AulaVirtual.
+
+
+# Importación y preprocesamiento de los datos
+
+```{r}
+# Carga inicial del archivo de logs
+logs <- read_csv("data/logs_moodle_anon.csv", show_col_types = FALSE)
+
+# Vista preliminar del dataset para analizar las variables y datos
+glimpse(logs)
+```
+
+Podemos observar que muchos registros aparecen con valores NA en la columna "Usuario afectado". Esto no representa un error en los datos, ya que muchas de las operaciones no involucran a un segundo usuario. 
+Vemos que por ahora todas las variables están en formato 'chr', por lo que será necesario transformarlas al tipo de dato correspondiente. Se identifica que en la columna 'Descripcion' se combinan los datos de la columna 'Componente' y los id del curso y estudiante. Asimismo, dado que la temporalidad es crítica para el análisis, procederemos a filtrar los registros con valores nulos en la fecha, ya que carecen de valor informativo para este estudio. Tambien haremos una prueba si todas la IPs están en formato estándar IPv4 o IPv6, como se especifica en el codebook proporcionado.
+A primera vista no se detectan valores atípicos evidentes.
+
+
+```{r}
+# Filtrado de cualquier fila sin fecha y cambio de formato
+logs <- logs %>% filter(!is.na(Hora)) %>% mutate(
+  # formato de fecha "d/m/y, H:M:S" (año con 2 dígitos)
+  Hora =  parse_date_time(Hora, orders = "d/m/y, H:M:S"),
+  # para el analisis en las siguientes preguntas nos conviene separar estos datos en fecha, hora y dia de la semana
+  Fecha = as_date(Hora),
+  Horas = round_date(Hora, unit = "hour"),
+  Horas = hour(Horas),
+  DiaSemana = wday(Hora, week_start = 1),
+  # numeros en vez de nombre para que no influya el sistema operativo
+  # formateo
+  Componente = factor(Componente),
+  # control de IPs
+  IP_Correcta = ip_address(`Dirección IP`),
+  IP_Correcta = is_ip_address(IP_Correcta)
+)
+
+#control que todas las IPs son correctas
+cat("Todas las IPs son correctas: ", all(logs$IP_Correcta))
+```
+
+A continuación, analizaremos la extensión del periodo temporal que abarcan los registros obtenidos. 
+
+```{r}
+resumen_temporal <- logs %>%
+  summarise(inicio = min(Fecha), fin = max(Fecha))
+
+print(resumen_temporal)
+```
+Vemos que la actividad comienza en julio de 2024, antes del inicio del curso académico, y se extiende hasta marzo de 2026. Este rango cubre casi dos años de registros. Aunque las preguntas planteadas son ambiguas y podrían aplicarse sin acotar este rango, tiene más sentido analizar un curso académico completo, idealmente el del año pasado, para así identificar qué aspectos es necesario mejorar de cara al futuro.
+
+```{r}
+curso_2025 <- logs %>%
+  filter(Fecha >= as.Date("2024-09-01") &
+           Fecha <= as.Date("2025-08-31"))
+```
+
+```{r tabla-logs}
+kable(head(logs, 10), caption = "Muestra de los primeros 10 registros de actividad.")
+```
+
+------------------------------------------------------------------------
+
+## Pregunta 1: Picos de actividad. ¿Cuál es el horario de máxima actividad y cómo varía entre días laborables y fines de semana?
+
+Para responder a esta pregunta, clasificamos cada registro del curso académico 2024-2025 según la hora del día (franja horaria de 0 a 23) y el tipo de día (laborable de lunes a viernes, o fin de semana sábado y domingo). A continuación, contamos el número de eventos por franja horaria y tipo de día para identificar los picos de actividad.
+
+```{r p1-datos, message=FALSE, warning=FALSE}
+# Clasificación de los registros por hora y tipo de día
+actividad_horaria <- curso_2025 %>%
+  mutate(TipoDia = if_else(DiaSemana <= 5, "Laborable", "Fin de semana")) %>%
+  group_by(Horas, TipoDia) %>%
+  summarise(Eventos = n(), .groups = "drop")
+
+# Hora pico global
+hora_pico_global <- actividad_horaria %>%
+  group_by(Horas) %>%
+  summarise(Total = sum(Eventos), .groups = "drop") %>%
+  slice_max(Total, n = 1)
+
+# Hora pico por tipo de día
+hora_pico_tipo <- actividad_horaria %>%
+  group_by(TipoDia) %>%
+  slice_max(Eventos, n = 1) %>%
+  ungroup()
+
+cat("Hora de mayor actividad global:", hora_pico_global$Horas, "h con",
+    hora_pico_global$Total, "eventos\n")
+cat("Hora pico en días laborables:",
+    hora_pico_tipo$Horas[hora_pico_tipo$TipoDia == "Laborable"], "h\n")
+cat("Hora pico en fines de semana:",
+    hora_pico_tipo$Horas[hora_pico_tipo$TipoDia == "Fin de semana"], "h\n")
+```
+
+En la Tabla \@ref(tab:tabla-actividad-horaria) se muestra el número de eventos registrados por franja horaria y tipo de día para las horas con mayor actividad (de 7:00 a 23:00).
+
+```{r tabla-actividad-horaria}
+actividad_horaria %>%
+  filter(Horas >= 7) %>%
+  pivot_wider(names_from = TipoDia,
+              values_from = Eventos,
+              values_fill = 0) %>%
+  rename(Hora = Horas) %>%
+  arrange(Hora) %>%
+  kable(caption = "Eventos por franja horaria y tipo de día (horas >= 7:00)") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE
+  )
+```
+
+La Figura \@ref(fig:fig-actividad-horaria) representa la distribución de eventos a lo largo del día distinguiendo entre días laborables y fines de semana.
+
+```{r fig-actividad-horaria, fig.cap="Distribución de la actividad horaria en días laborables y fines de semana durante el curso 2024-2025."}
+ggplot(actividad_horaria,
+       aes(
+         x = Horas,
+         y = Eventos,
+         color = TipoDia,
+         group = TipoDia
+       )) +
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 2.2) +
+  scale_x_continuous(breaks = 0:23) +
+  scale_color_manual(values = c("Laborable" = "blue", "Fin de semana" = "red"),
+                     name = "Tipo de día") +
+  labs(
+    title = "Actividad horaria en el Aula Virtual",
+    subtitle = "Curso académico 2024-2025",
+    x = "Hora del día",
+    y = "Número de eventos"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "top")
+```
+
+Para profundizar en el análisis, estudiamos cómo se distribuye la actividad total a lo largo de los siete días de la semana.
+
+```{r p1-diasemana-datos, message=FALSE, warning=FALSE}
+etiquetas_dia <- c("Lunes",
+                   "Martes",
+                   "Miércoles",
+                   "Jueves",
+                   "Viernes",
+                   "Sábado",
+                   "Domingo")
+
+actividad_diasemana <- curso_2025 %>%
+  mutate(
+    NombreDia = factor(etiquetas_dia[DiaSemana], levels = etiquetas_dia),
+    TipoDia   = if_else(DiaSemana <= 5, "Laborable", "Fin de semana")
+  ) %>%
+  group_by(NombreDia, TipoDia) %>%
+  summarise(Eventos = n(), .groups = "drop")
+
+# Día con más actividad
+dia_pico <- actividad_diasemana %>% slice_max(Eventos, n = 1)
+cat("Día de mayor actividad:", as.character(dia_pico$NombreDia),
+    "con", dia_pico$Eventos, "eventos\n")
+```
+
+La Tabla \@ref(tab:tabla-diasemana) recoge el total de eventos registrados en cada día de la semana.
+
+```{r tabla-diasemana}
+actividad_diasemana %>%
+  mutate(Porcentaje = paste0(round(Eventos / sum(Eventos) * 100, 1), " %")) %>%
+  rename(`Día` = NombreDia,
+         `Tipo` = TipoDia,
+         `Nº eventos` = Eventos) %>%
+  kable(caption = "Total de eventos por día de la semana (curso 2024-2025)") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE
+  ) %>%
+  row_spec(which(actividad_diasemana$TipoDia == "Fin de semana"),
+           background = "#FFF0EE")
+```
+
+La Figura \@ref(fig:fig-diasemana-barras) muestra el volumen de eventos por día de la semana mediante un gráfico de barras.
+
+```{r fig-diasemana-barras, fig.cap="Volumen total de eventos por día de la semana durante el curso 2024-2025. Los días de fin de semana aparecen en rojo."}
+ggplot(actividad_diasemana,
+       aes(x = NombreDia, y = Eventos, fill = TipoDia)) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = scales::comma(Eventos)),
+            vjust = -0.4,
+            size = 3.2) +
+  scale_fill_manual(values = c("Laborable" = "blue", "Fin de semana" = "red"),
+                    name = "Tipo de día") +
+  scale_y_continuous(labels = scales::comma, expand = expansion(mult = c(0, 0.1))) +
+  labs(
+    title    = "Actividad en el Aula Virtual por día de la semana",
+    subtitle = "Curso académico 2024-2025",
+    x = NULL,
+    y = "Número de eventos"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "top")
+```
+
+**Interpretación.** El análisis revela patrones de uso bien diferenciados tanto por tipo de día como por día concreto de la semana:
+
+- **Días laborables:** concentran el **89,9 %** de la actividad total del curso (97.685 eventos frente a 10.976 en fin de semana). El pico horario global se sitúa a las **12:00 h** (13.187 eventos en total), con la mayor concentración entre las **9:00 y las 14:00 h**, franja que coincide con el horario lectivo habitual. Se observa además un repunte a las **23:00 h** (4.145 eventos), lo que indica que una parte del alumnado accede a la plataforma al final del día. Dentro de los laborables, la actividad no es uniforme: el **miércoles** es el día de mayor uso con **25.251 eventos** (23,2 % del total semanal), seguido del **viernes** (22.159, 20,4 %) y el **martes** (18.085, 16,6 %). **Lunes y jueves** registran una actividad moderada (15.736 y 16.454 eventos respectivamente) siendo los días más tranquilos de la semana laboral.
+
+- **Fines de semana:** la actividad cae de forma notable. El **sábado** es el día más inactivo de toda la semana con solo **4.707 eventos** (4,3 %), incluso por debajo del domingo (6.269, 5,8 %). A diferencia de los laborables, el pico horario se desplaza a las **13:00 h** (1.149 eventos) y la actividad se mantiene relativamente constante entre las 11:00 y las 23:00 h, sin el pronunciado pico de mediodía propio de los días de clase. Esto refleja un uso más autónomo y flexible de la plataforma cuando no hay clases presenciales.
+
+**Conclusión.**
+
+En conclusión, la actividad en el Aula Virtual está fuertemente condicionada por el calendario académico: los miércoles y viernes en la franja de 9:00 a 14:00 h concentran los mayores picos de uso, mientras que los fines de semana, especialmente el sábado, presentan una actividad mínima distribuida de forma más uniforme a lo largo del día. Lo más probable es que en el curso 24-25 los alumnos tubiesen las dos clases semanales de la asignatura los miercoles a las **9:00 h** y los viernes a las **11:30 h**.
+
+------------------------------------------------------------------------
+
+## Pregunta 2: ¿Existe una relación entre las consultas de material y el número de entregas?
+
+Para encontrar la respuesta a esta pregunta, debemos calcular para cada usuario el número de eventos vinculados a la
+visualización o descarga de recursos (`Total_Consultas`) y el número de entregas realizadas (`Total_Entregas`).
+Finalmente, representamos la correlación entre ambas variables para determinar su grado de dependencia.
+Para saber cuales son los eventos de consultas o de entregas hay que hacer un análisis exploratorio de los eventos registrados en los logs, identificando todos los tipos de eventos únicos presentes en el conjunto de datos.
+Una vez clasificados, se aplicará una función de agregación para calcular la suma de ambos tipos de eventos por cada identificador de usuario único.
+El análisis se centra exclusivamente en el alumnado de la asignatura. En consecuencia, se excluyen los registros correspondientes al profesorado. Estos perfiles se identificaron mediante la detección de eventos de acceso restringidos para los estudiantes.
+
+```{r consultas-vs-entregas-tabla}
+#visualizamos todos los diferentes tipos de eventos
+#unique(logs$`Nombre evento`)
+consultas <- c('visto|vista|visualizado|visualizada|visitado|visitado|descargado|descargada')
+entregas <- c('enviado|subida|subido|enviadas|enviada')
+eventos_profesor <- "calificar|Informe de registro|matriculado"
+
+profesores <- logs %>% filter(str_detect(`Nombre evento`, 
+                                              pattern = regex(eventos_profesor, ignore_case = TRUE))) %>%
+  distinct(`Nombre completo del usuario`) %>%
+  pull(`Nombre completo del usuario`)
+
+logs_estudiante <- logs %>% filter(!(`Nombre completo del usuario` %in% profesores))
+
+relacion_consultas_entregas <- logs_estudiante %>% 
+  group_by(`Nombre completo del usuario`) %>%
+  summarize(
+    Total_Entregas = sum(str_detect(`Nombre evento`, pattern = regex(entregas, ignore_case = TRUE))), 
+    Total_Consultas = sum(str_detect(`Nombre evento`, pattern = regex(consultas, ignore_case = TRUE))),
+    .groups = 'drop')
+
+```
+
+
+
+```{r tabla de relacion entre consultas_entregas}
+relacion_consultas_entregas %>%
+  arrange(desc(Total_Entregas)) %>%
+  kable(caption = "Usuarios con mayor número de entregas") %>%
+  kable_styling(bootstrap_options = c("hover", "responsive"), full_width = FALSE)
+```
+
+
+```{r grafico_correlacion_consultas_entregas}
+correlacion_valor <- cor(relacion_consultas_entregas$Total_Consultas, 
+                         relacion_consultas_entregas$Total_Entregas, 
+                         method = "pearson")
+cat("La correlación entre las consultas y entregas es de :", correlacion_valor)
+
+#ggpairs(head(relacion_consultas_entregas, 10), title = "Matriz de Correlación") + theme_bw()
+
+ggplot(relacion_consultas_entregas, aes(x = Total_Entregas, y = Total_Consultas)) + 
+  geom_point(color = "red") +
+  geom_smooth(method = "lm", color = "darkred", fill = "lightgray") +
+  labs(
+    title = "Relación entre Consultas y Entregas",
+    subtitle = paste("Coeficiente de correlación de Pearson:", round(correlacion_valor, 3)),
+    x = "Total de Consultas",
+    y = "Total de Entregas",
+    caption = "Nota: Registros solo del alumnado"
+  )
+```
+Inicialmente se consideró el uso de la función ggpairs() para representar la matriz de correlación entre ambas variables. No obstante, dada la elevada densidad de los registros y la disparidad en los rangos de los datos del archivo original, dicha visualización resultaba confusa y dificultaba la interpretación de los resultados. Por eso, se optó por un diagrama de dispersión con anotaciones, usando el coeficiente de correlación de Pearson para evaluar la relación lineal entre el número de consultas y de entregas.
+Los resultados revelan una correlación positiva significativa entre ambas variables. Cuanto más material consultan los alumnos, más tareas entregan generalmente.
+
+
+
+## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? (C)
+
+```{r recursos-menos-vistos}
+# Agrupamos por Componente y Nombre evento para ver, ¿qué se ignora?
+
+recursos_infrautilizados <- curso_2025 %>%
+  group_by(Componente) %>%
+  summarise(
+    Total_Interacciones = n(),
+    Usuarios_Unicos = n_distinct(`Nombre completo del usuario`)
+  ) %>% arrange(Total_Interacciones)
+
+# Identificar recursos con cero clicks o visitas
+# necesitamos nombre del recurso, en columna Contexto del evento
+
+recursos_especificos <- curso_2025 %>%
+  filter(Componente %in% c("Archivo", "Carpeta", "URL", "Página")) %>%
+  group_by(`Contexto del evento`) %>%
+  summarise(
+    Clicks = n(),
+    Estudiantes_Distintos = n_distinct(`Nombre completo del usuario`)
+  ) %>%
+  arrange(Clicks)
+
+# Definir un umbral de Baja interacción
+
+umbral_bajo = 5
+recursos_criticos <- recursos_especificos %>% 
+  filter(Clicks < umbral_bajo)
+
+# Visualización de los 10 recursos menos utilizados
+
+ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Clicks), y = Clicks)) +
+  geom_col(fill = "hotpink") +
+  coord_flip() +
+  labs(
+    title = "Top 10 Recursos con menos interaccion",
+    subtitle = "Recursos que podrían eliminarse o reubicarse mejor",
+    x = "Nombre del Recurso",
+    y = "Núm. de clicks"
+  ) + theme_minimal()
+```
+
+
+## Pregunta 4: ¿Qué proporción de la actividad total del alumnado es consulta pasiva de materiales frente a participación activa en entregas y cuestionarios?
+```{r p4-datos, message=FALSE, warning=FALSE}
+
+consultas <- c('visto|vista|visualizado|visualizada|visitado|descargado|descargada')
+entregas   <- c('enviado|subida|subido|enviadas|enviada')
+cuestionarios <- c('intento|respondido|completado|calificado')
+eventos_profesor <- "calificar|Informe de registro|matriculado"
+
+profesores <- curso_2025 %>%
+  filter(str_detect(`Nombre evento`,
+                    regex(eventos_profesor, ignore_case = TRUE))) %>%
+  distinct(`Nombre completo del usuario`) %>%
+  pull(`Nombre completo del usuario`)
+
+logs_estudiante_p4 <- curso_2025 %>%
+  filter(!(`Nombre completo del usuario` %in% profesores))
+
+actividad_tipo <- logs_estudiante_p4 %>%
+  mutate(
+    Tipo = case_when(
+      str_detect(`Nombre evento`, regex(consultas,     ignore_case = TRUE)) ~ "Pasiva (Consulta)",
+      str_detect(`Nombre evento`, regex(entregas,      ignore_case = TRUE)) ~ "Activa (Entrega)",
+      str_detect(`Nombre evento`, regex(cuestionarios, ignore_case = TRUE)) ~ "Activa (Cuestionario)",
+      TRUE ~ "Otra"
+    )
+  ) %>%
+  filter(Tipo != "Otra")
+
+resumen_p4 <- actividad_tipo %>%
+  group_by(Tipo) %>%
+  summarise(Total = n(), .groups = "drop") %>%
+  mutate(Porcentaje = round(Total / sum(Total) * 100, 1))
+
+cat("Distribución de la actividad del alumnado:\n")
+print(resumen_p4)
+```
+
+
+
+```{r tabla-p4}
+resumen_p4 %>%
+  rename(`Tipo de actividad` = Tipo,
+         `Nº eventos`        = Total,
+         `Porcentaje (%)`    = Porcentaje) %>%
+  kable(caption = "Actividad pasiva frente a activa del alumnado (curso 2024-2025)") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE
+  )
+```
+
+```{r fig-p4-pastel, fig.cap="proporción de actividad pasiva (consulta) frente a activa (entregas y cuestionaríos) del alumnado durante el curso 2024-2025,"}
+
+ggplot(resumen_p4, aes(x = "", y = Total, fill = Tipo)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = paste0(Porcentaje, "%")),
+            position = position_stack(vjust = 0.5),
+            size = 4.5, fontface = "bold") +
+  scale_fill_manual(values = c(
+    "Pasiva (Consulta)"     = "#2E86C1",
+    "Activa (Entrega)"      = "#E67E22",
+    "Activa (Cuestionario)" = "#27AE60"
+  )) +
+  labs(
+    title    = "Actividad pasiva vs. activa en el Aula Virtual",
+    subtitle = "Curso académico 2024-2025",
+    fill     = "Tipo de actividad",
+    x = NULL, y = NULL
+  ) +
+  theme_void(base_size = 12) +
+  theme(legend.position = "right")
+```
+
+
+
+```{r fig-p4-barras, fig.cap="Volumen absoluto de eventos por tipo de actividad del alumnado durante el curso 2024-2025."}
+ggplot(resumen_p4, aes(x = reorder(Tipo, -Total), y = Total, fill = Tipo)) +
+  geom_col(width = 0.6, show.legend = FALSE) +
+  geom_text(aes(label = paste0(scales::comma(Total), "\n(", Porcentaje, "%)")),
+            vjust = -0.4, size = 3.5) +
+  scale_fill_manual(values = c(
+    "Pasiva (Consulta)"     = "#2E86C1",
+    "Activa (Entrega)"      = "#E67E22",
+    "Activa (Cuestionario)" = "#27AE60"
+  )) +
+  scale_y_continuous(labels = scales::comma,
+                     expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title    = "Volumen de actividad por tipo",
+    subtitle = "Curso académico 2024-2025",
+    x        = "Tipo de actividad",
+    y        = "Número de eventos"
+  ) +
+  theme_minimal(base_size = 12)
+```
+```
+
+
+# Pregunta 6: Patrones de conectividad
+***
+
+El análisis de la procedencia de las conexiones es fundamental para entender el comportamiento del alumnado y la utilidad de las infraestructuras universitarias. En esta sección, nos proponemos investigar en qué medida predomina el acceso desde la red interna de la universidad (LAN/WiFi eduroam) frente a conexiones externas (hogares o redes móviles) durante el horario lectivo.
+
+Para ello, utilizaremos la librería **ipaddress** con el fin de clasificar cada registro de los logs.
+
+```{r tabla-contador-ip}
+contador_ips <- curso_2025 %>%
+  filter(hour(Hora) >= 9 & hour(Hora) <= 12) %>%
+  count(`Dirección IP`, sort = TRUE) %>% head(10)
+kable(contador_ips, caption = "Top 10 de direcciones IP más frecuentes en horario lectivo")
+```
+
+Viendo la tabla \@ref(tab:tabla-contador-ip) cuales son las direcciones IP más repetidas durante horario lectivo podemos sacar varias conclusiones. La dirección IP con mas registros **2001:720:1014:88:0:0:a:6b7** lo que sugiere que sea la que corresponde a la infraestructura WiFi eduroam del campus. En segundo lugar hay una IP que corresponde a una compañía telefónica (Posiblemente se trate de una IP de un alumno muy aplicado o una casa donde varias personas se conectan desde la misma red). Y la última direccion IP con más diferencia de uso a todas las demás **147.156.86.41**, se trata de la IP que utilizan los ordenadores de la universidad.
+
+Este gráfico \@ref(fig:fig-conexiones-lectivas) muestra claramente que son muy pocas las conexiones internas fuera de horario lectivo. De la misma manera las conexiones internas en el horario lectivo son un poco mas del 70%.
+```{r fig-conexiones-lectivas, fig.cap = "Conexiones: Internas vs Externas"}
+red_uv_v4 <- ip_network("147.156.0.0/16")
+red_uv_v6 <- ip_network("2001:720:1014::/48")
+
+logs_e6 <- curso_2025 %>% 
+  filter(IP_Correcta == TRUE,!is.na(`Dirección IP`), !is.na(Horas), !is.na(DiaSemana)) %>%
+  mutate(
+    IP = ip_address(`Dirección IP`),
+    Es_interna = is_within(IP, red_uv_v4) | is_within(IP, red_uv_v6),
+    Tipo_conexion = if_else(Es_interna, "Interna (Campus)", "Externa (Casa/Móvil)"),
+    Horario = if_else(DiaSemana <= 5 & Horas >= 9 & Horas < 15, 
+                      "Lectivo", "Fuera de horario")
+  ) %>%
+  filter(!is.na(Tipo_conexion))
+
+#kable(logs_e6)
+
+resumen_e6 <- logs_e6 %>%
+  group_by(Horario, Tipo_conexion) %>%
+  summarise(Total = n(), .groups = 'drop') %>%
+  mutate(Porcentaje = round(Total / sum(Total) * 100, 2))
+
+kable(resumen_e6)
+
+ggplot(logs_e6, aes(x = Horario, fill = Tipo_conexion)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = c("Interna (Campus)" = "#2E86C1", "Externa (Casa/Móvil)" = "#E67E22")) +
+  labs(
+    title = "Predominio de Conexión: Universidad vs. Exterior",
+    subtitle = "Comparativa basada en rangos IPv4/IPv6 de la UV durante horario lectivo",
+    x = "Franja Horaria",
+    y = "Proporción de Accesos",
+    fill = "Origen de Conexión"
+  ) +
+  theme_minimal()
+```
+
+Para tener una vista más clara de cuando son los patrones de mas conectividad, la Figura \@ref(fig:fig-historiograma-origen-dia) nos da mucha información.
+
+La gran parte del volumen de las conexiones se concentra entre las 10:00 y las 14:00 de la mañana. De las cuales, la mayoría son conexiones con origen del campus. Y es por las tardes cuando hay un pequeño volumen constante de conexiones externas al campus. 
+
+Domingos y sabados hay muy pocas conexiones y todas son externas.
+
+```{r fig-historiograma-origen-dia, fig.cap = "Historiogramas de conexiones por día de la semana."}
+logs_e6 <- logs_e6 %>%
+  mutate(NombreDia = wday(Hora, label = TRUE, abbr = FALSE, week_start = 1))
+
+ggplot(logs_e6, aes(x = factor(Horas), fill = Tipo_conexion)) +
+  geom_bar(position = "stack") +
+  facet_wrap(~NombreDia, ncol = 2) +
+  scale_x_discrete(breaks = as.character(seq(0, 23, by = 4))) +
+  scale_fill_manual(values = c("Interna (Campus)" = "#2E86C1", "Externa (Casa/Móvil)" = "#E67E22")) +
+  labs(
+    title = "Volumen de Actividad Semanal por Origen",
+    x = "Hora",
+    y = "Interacciones Totales",
+    fill = "Origen"
+  ) +
+  theme_light() +
+  theme(legend.position = "top", strip.background = element_rect(fill = "#5D6D7E"))
+```
+
