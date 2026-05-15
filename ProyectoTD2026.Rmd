@@ -610,17 +610,17 @@ También presentan una elevada actividad distintos cuestionarios temáticos como
 
 En cuanto a las tareas prácticas, destacan especialmente:
 
--   **Examen Laboratorio TD 1ª Convocatoria 2025** (2.052 interacciones)
+• Examen Laboratorio TD 1ª Convocatoria 2025 (2.031 interacciones)
 
--   **Práctica 1: Importación - Tarea** (1.979)
+• Práctica 1: Importación - Tarea (1.952)
 
--   **Práctica 4. Entrega de ejercicios** (1.938)
+• Práctica 4. Entrega de ejercicios (1.923)
 
--   **Práctica 2. Visualización** (1.585)
+• Práctica 2. Visualización (1.561)
 
--   **Práctica 3: Entrega de ejercicios** (1.578)
+• Práctica 3: Entrega de ejercicios (1.554)
 
-Además, las tareas asociadas a plataformas externas como **Datacamp** también muestran una actividad considerable, lo que refleja una participación activa en actividades complementarias de aprendizaje autónomo.
+Además, las tareas asociadas a plataformas externas también muestran una actividad considerable, lo que refleja una participación activa en actividades complementarias de aprendizaje autónomo.
 
 **Conclusión.**
 
