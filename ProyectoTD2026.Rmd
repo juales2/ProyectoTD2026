@@ -4,11 +4,11 @@ subtitle: "Análisis de registros en Moodle"
 author: "Andrea Vandirek Romero, Julián Alcázar Escobedo, Jalal Imrani Mangat, Carmela Lorente, Mario Juan Moya"
 date: "2026-04-15"
 output:
+  bookdown::pdf_document2: default
   bookdown::html_document2:
     theme: lumen
     df_print: paged
     number_sections: true
-  bookdown::pdf_document2: default
 ---
 
 ```{r setup, include=FALSE}
