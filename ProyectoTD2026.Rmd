@@ -39,62 +39,33 @@ pacman::p_load(
 
 # Introducción
 
-El objetivo principal de este proyecto es realizar un análisis
-exploratorio de los registros de actividad (*logs*) dentro del Aula
-Virtual durante el curso académico 2024-2025 de la asignatura
-Tratamiento de los Datos.
+El objetivo principal de este proyecto es realizar un análisis exploratorio de los registros de actividad (*logs*) dentro del Aula Virtual durante el curso académico 2024-2025 de la asignatura Tratamiento de los Datos.
 
-Los datos con los logs, donde la información sensible se ha anonimizado,
-se encuentran en el fichero `logs_moodle_anon.csv.` A través de este
-estudio, transformaremos los datos brutos del archivo
-`logs_moodle_anon.csv` en información relevante para identificar
-patrones de uso, recursos críticos y comportamientos del alumnado en la
-plataforma.
+Los datos con los logs, donde la información sensible se ha anonimizado, se encuentran en el fichero `logs_moodle_anon.csv.` A través de este estudio, transformaremos los datos brutos del archivo `logs_moodle_anon.csv` en información relevante para identificar patrones de uso, recursos críticos y comportamientos del alumnado en la plataforma.
 
 ## Preguntas de investigación
 
 Se plantean las siguientes cuatro preguntas que guiarán el análisis:
 
-1.  **Picos de actividad.** ¿Cuál es el horario de máxima actividad y
-    cómo varía entre días laborables y fines de semana?
+1.  **Picos de actividad.** ¿Cuál es el horario de máxima actividad y cómo varía entre días laborables y fines de semana?
 
-2.  **Correlación consultas–entregas.** ¿Existe una relación entre la
-    frecuencia de consulta de materiales y el número de entregas
-    realizadas por cada usuario?
+2.  **Correlación consultas–entregas.** ¿Existe una relación entre la frecuencia de consulta de materiales y el número de entregas realizadas por cada usuario?
 
-3.  **Optimización de recursos.** ¿Qué recursos o materiales presentan
-    un nivel de interacción nulo o muy bajo?
+3.  **Optimización de recursos.** ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo?
 
-4.  **Nivel de proactividad.** ¿Qué proporción de la actividad total del
-    alumnado es consulta pasiva de materiales frente a participación
-    activa en entregas y cuestionarios?
+4.  **Nivel de proactividad.** ¿Qué proporción de la actividad total del alumnado es consulta pasiva de materiales frente a participación activa en entregas y cuestionarios?
 
-5.  **Recursos de alto impacto.** ¿Qué materiales generan el mayor
-    volumen de interacción y qué indica esto sobre el interés o la
-    dificultad de los contenidos?
+5.  **Recursos de alto impacto.** ¿Qué materiales generan el mayor volumen de interacción y qué indica esto sobre el interés o la dificultad de los contenidos?
 
-6.  **Patrones de conectividad.** ¿En qué medida predomina el acceso
-    desde la red interna de la universidad frente a conexiones externas
-    durante el horario de clase?
+6.  **Patrones de conectividad.** ¿En qué medida predomina el acceso desde la red interna de la universidad frente a conexiones externas durante el horario de clase?
 
 # ¿Qué esperamos de este tratamiento/estudio de los datos?
 
-Con este tratamiento esperamos transformar los logs en métricas o
-patrones que permitan trocear la actividad por franjas horarias y tipos
-de día (laboral o festivo) para identificar los picos de uso, que nos
-serviria para poder elegir un horario donde la mayoria estuviesen
-disponibles para alguna actividad, por ejemplo.
+Con este tratamiento esperamos transformar los logs en métricas o patrones que permitan trocear la actividad por franjas horarias y tipos de día (laboral o festivo) para identificar los picos de uso, que nos serviria para poder elegir un horario donde la mayoria estuviesen disponibles para alguna actividad, por ejemplo.
 
-Además, queriamos medir la proactividad y correlacionar el consumo de
-recursos con el rendimiento para que los profes puedan valorar que
-archivos subir para que sean utiles y eficaces y cuales solo llenan mas
-visualmente la pagina.
+Además, queriamos medir la proactividad y correlacionar el consumo de recursos con el rendimiento para que los profes puedan valorar que archivos subir para que sean utiles y eficaces y cuales solo llenan mas visualmente la pagina.
 
-Finalmente, queriamos hacer la limpieza de registros nulos y la
-detección de outliers para que el análisis de recursos menos utilizados
-no esté sesgado por los errores de registro,y que cada click que
-estudiemos represente una interacción real del alumnado con el
-AulaVirtual.
+Finalmente, queriamos hacer la limpieza de registros nulos y la detección de outliers para que el análisis de recursos menos utilizados no esté sesgado por los errores de registro,y que cada click que estudiemos represente una interacción real del alumnado con el AulaVirtual.
 
 # Importación y preprocesamiento de los datos
 
@@ -106,19 +77,7 @@ logs <- read_csv("data/logs_moodle_anon.csv", show_col_types = FALSE)
 glimpse(logs)
 ```
 
-Podemos observar que muchos registros aparecen con valores NA en la
-columna "Usuario afectado". Esto no representa un error en los datos, ya
-que muchas de las operaciones no involucran a un segundo usuario. Vemos
-que por ahora todas las variables están en formato 'chr', por lo que
-será necesario transformarlas al tipo de dato correspondiente. Se
-identifica que en la columna 'Descripcion' se combinan los datos de la
-columna 'Componente' y los id del curso y estudiante. Asimismo, dado que
-la temporalidad es crítica para el análisis, procederemos a filtrar los
-registros con valores nulos en la fecha, ya que carecen de valor
-informativo para este estudio. Tambien haremos una prueba si todas la
-IPs están en formato estándar IPv4 o IPv6, como se especifica en el
-codebook proporcionado. A primera vista no se detectan valores atípicos
-evidentes.
+Podemos observar que muchos registros aparecen con valores NA en la columna "Usuario afectado". Esto no representa un error en los datos, ya que muchas de las operaciones no involucran a un segundo usuario. Vemos que por ahora todas las variables están en formato 'chr', por lo que será necesario transformarlas al tipo de dato correspondiente. Se identifica que en la columna 'Descripcion' se combinan los datos de la columna 'Componente' y los id del curso y estudiante. Asimismo, dado que la temporalidad es crítica para el análisis, procederemos a filtrar los registros con valores nulos en la fecha, ya que carecen de valor informativo para este estudio. Tambien haremos una prueba si todas la IPs están en formato estándar IPv4 o IPv6, como se especifica en el codebook proporcionado. A primera vista no se detectan valores atípicos evidentes.
 
 ```{r}
 # Filtrado de cualquier fila sin fecha y cambio de formato
@@ -142,8 +101,7 @@ logs <- logs %>% filter(!is.na(Hora)) %>% mutate(
 cat("Todas las IPs son correctas: ", all(logs$IP_Correcta))
 ```
 
-A continuación, analizaremos la extensión del periodo temporal que
-abarcan los registros obtenidos.
+A continuación, analizaremos la extensión del periodo temporal que abarcan los registros obtenidos.
 
 ```{r}
 resumen_temporal <- logs %>%
@@ -152,12 +110,7 @@ resumen_temporal <- logs %>%
 kable(resumen_temporal, caption = "Franja temporal trabajada")
 ```
 
-Vemos que la actividad comienza en julio de 2024, antes del inicio del
-curso académico, y se extiende hasta marzo de 2026. Este rango cubre
-casi dos años de registros. Aunque las preguntas planteadas son ambiguas
-y podrían aplicarse sin acotar este rango, tiene más sentido analizar un
-curso académico completo, idealmente el del año pasado, para así
-identificar qué aspectos es necesario mejorar de cara al futuro.
+Vemos que la actividad comienza en julio de 2024, antes del inicio del curso académico, y se extiende hasta marzo de 2026. Este rango cubre casi dos años de registros. Aunque las preguntas planteadas son ambiguas y podrían aplicarse sin acotar este rango, tiene más sentido analizar un curso académico completo, idealmente el del año pasado, para así identificar qué aspectos es necesario mejorar de cara al futuro.
 
 ```{r}
 curso_2025 <- logs %>%
@@ -165,9 +118,7 @@ curso_2025 <- logs %>%
            Fecha <= as.Date("2025-08-31"))
 ```
 
-La Tabla \@ref(tab:tabla-logs) presenta una muestra de los 5 primeros
-registros del curso 2024-2025, proporcionando una referencia visual de
-la estructura de los datos objeto de estudio.
+La Tabla \@ref(tab:tabla-logs) presenta una muestra de los 5 primeros registros del curso 2024-2025, proporcionando una referencia visual de la estructura de los datos objeto de estudio.
 
 ```{r tabla-logs}
 kable(head(logs, 5), caption = "Muestra de los primeros 5 registros de actividad.")
@@ -175,13 +126,9 @@ kable(head(logs, 5), caption = "Muestra de los primeros 5 registros de actividad
 
 ------------------------------------------------------------------------
 
-## Pregunta 1: Picos de actividad. ¿Cuál es el horario de máxima actividad y cómo varía entre días laborables y fines de semana? {-}
+## Pregunta 1: Picos de actividad. ¿Cuál es el horario de máxima actividad y cómo varía entre días laborables y fines de semana? {.unnumbered}
 
-Para responder a esta pregunta, clasificamos cada registro del curso
-académico 2024-2025 según la hora del día (franja horaria de 0 a 23) y
-el tipo de día (laborable de lunes a viernes, o fin de semana sábado y
-domingo). A continuación, contamos el número de eventos por franja
-horaria y tipo de día para identificar los picos de actividad.
+Para responder a esta pregunta, clasificamos cada registro del curso académico 2024-2025 según la hora del día (franja horaria de 0 a 23) y el tipo de día (laborable de lunes a viernes, o fin de semana sábado y domingo). A continuación, contamos el número de eventos por franja horaria y tipo de día para identificar los picos de actividad.
 
 ```{r p1-datos, message=FALSE, warning=FALSE}
 # Clasificación de los registros por hora y tipo de día
@@ -210,9 +157,7 @@ cat("Hora pico en fines de semana:",
     hora_pico_tipo$Horas[hora_pico_tipo$TipoDia == "Fin de semana"], "h\n")
 ```
 
-En la Tabla \@ref(tab:tabla-actividad-horaria) se muestra el número de
-eventos registrados por franja horaria y tipo de día para las horas con
-mayor actividad (de 7:00 a 23:00).
+En la Tabla \@ref(tab:tabla-actividad-horaria) se muestra el número de eventos registrados por franja horaria y tipo de día para las horas con mayor actividad (de 7:00 a 23:00).
 
 ```{r tabla-actividad-horaria}
 actividad_horaria %>%
@@ -229,9 +174,7 @@ actividad_horaria %>%
   )
 ```
 
-La Figura \@ref(fig:fig-actividad-horaria) representa la distribución de
-eventos a lo largo del día distinguiendo entre días laborables y fines
-de semana.
+La Figura \@ref(fig:fig-actividad-horaria) representa la distribución de eventos a lo largo del día distinguiendo entre días laborables y fines de semana.
 
 ```{r fig-actividad-horaria, fig.cap="Distribución de la actividad horaria en días laborables y fines de semana durante el curso 2024-2025."}
 ggplot(actividad_horaria,
@@ -256,8 +199,7 @@ ggplot(actividad_horaria,
   theme(legend.position = "top")
 ```
 
-Para profundizar en el análisis, estudiamos cómo se distribuye la
-actividad total a lo largo de los siete días de la semana.
+Para profundizar en el análisis, estudiamos cómo se distribuye la actividad total a lo largo de los siete días de la semana.
 
 ```{r p1-diasemana-datos, message=FALSE, warning=FALSE}
 etiquetas_dia <- c("Lunes",
@@ -282,8 +224,7 @@ cat("Día de mayor actividad:", as.character(dia_pico$NombreDia),
     "con", dia_pico$Eventos, "eventos\n")
 ```
 
-La Tabla \@ref(tab:tabla-diasemana) recoge el total de eventos
-registrados en cada día de la semana.
+La Tabla \@ref(tab:tabla-diasemana) recoge el total de eventos registrados en cada día de la semana.
 
 ```{r tabla-diasemana}
 actividad_diasemana %>%
@@ -300,8 +241,7 @@ actividad_diasemana %>%
            background = "#FFF0EE")
 ```
 
-La Figura \@ref(fig:fig-diasemana-barras) muestra el volumen de eventos
-por día de la semana mediante un gráfico de barras.
+La Figura \@ref(fig:fig-diasemana-barras) muestra el volumen de eventos por día de la semana mediante un gráfico de barras.
 
 ```{r fig-diasemana-barras, fig.cap="Volumen total de eventos por día de la semana durante el curso 2024-2025. Los días de fin de semana aparecen en rojo."}
 ggplot(actividad_diasemana,
@@ -323,62 +263,21 @@ ggplot(actividad_diasemana,
   theme(legend.position = "top")
 ```
 
-**Interpretación.** El análisis revela patrones de uso bien
-diferenciados tanto por tipo de día como por día concreto de la semana:
+**Interpretación.** El análisis revela patrones de uso bien diferenciados tanto por tipo de día como por día concreto de la semana:
 
--   **Días laborables:** concentran el **89,9 %** de la actividad total
-    del curso (97.685 eventos frente a 10.976 en fin de semana). El pico
-    horario global se sitúa a las **12:00 h** (13.187 eventos en total),
-    con la mayor concentración entre las **9:00 y las 14:00 h**, franja
-    que coincide con el horario lectivo habitual. Se observa además un
-    repunte a las **23:00 h** (4.145 eventos), lo que indica que una
-    parte del alumnado accede a la plataforma al final del día. Dentro
-    de los laborables, la actividad no es uniforme: el **miércoles** es
-    el día de mayor uso con **25.251 eventos** (23,2 % del total
-    semanal), seguido del **viernes** (22.159, 20,4 %) y el **martes**
-    (18.085, 16,6 %). **Lunes y jueves** registran una actividad
-    moderada (15.736 y 16.454 eventos respectivamente) siendo los días
-    más tranquilos de la semana laboral.
+-   **Días laborables:** concentran el **89,9 %** de la actividad total del curso (97.685 eventos frente a 10.976 en fin de semana). El pico horario global se sitúa a las **12:00 h** (13.187 eventos en total), con la mayor concentración entre las **9:00 y las 14:00 h**, franja que coincide con el horario lectivo habitual. Se observa además un repunte a las **23:00 h** (4.145 eventos), lo que indica que una parte del alumnado accede a la plataforma al final del día. Dentro de los laborables, la actividad no es uniforme: el **miércoles** es el día de mayor uso con **25.251 eventos** (23,2 % del total semanal), seguido del **viernes** (22.159, 20,4 %) y el **martes** (18.085, 16,6 %). **Lunes y jueves** registran una actividad moderada (15.736 y 16.454 eventos respectivamente) siendo los días más tranquilos de la semana laboral.
 
--   **Fines de semana:** la actividad cae de forma notable. El
-    **sábado** es el día más inactivo de toda la semana con solo **4.707
-    eventos** (4,3 %), incluso por debajo del domingo (6.269, 5,8 %). A
-    diferencia de los laborables, el pico horario se desplaza a las
-    **13:00 h** (1.149 eventos) y la actividad se mantiene relativamente
-    constante entre las 11:00 y las 23:00 h, sin el pronunciado pico de
-    mediodía propio de los días de clase. Esto refleja un uso más
-    autónomo y flexible de la plataforma cuando no hay clases
-    presenciales.
+-   **Fines de semana:** la actividad cae de forma notable. El **sábado** es el día más inactivo de toda la semana con solo **4.707 eventos** (4,3 %), incluso por debajo del domingo (6.269, 5,8 %). A diferencia de los laborables, el pico horario se desplaza a las **13:00 h** (1.149 eventos) y la actividad se mantiene relativamente constante entre las 11:00 y las 23:00 h, sin el pronunciado pico de mediodía propio de los días de clase. Esto refleja un uso más autónomo y flexible de la plataforma cuando no hay clases presenciales.
 
 **Conclusión.**
 
-En conclusión, la actividad en el Aula Virtual está fuertemente
-condicionada por el calendario académico: los miércoles y viernes en la
-franja de 9:00 a 14:00 h concentran los mayores picos de uso, mientras
-que los fines de semana, especialmente el sábado, presentan una
-actividad mínima distribuida de forma más uniforme a lo largo del día.
-Lo más probable es que en el curso 24-25 los alumnos tuviesen las dos
-clases semanales de la asignatura los miercoles a las **9:00 h** y los
-viernes a las **11:30 h**.
+En conclusión, la actividad en el Aula Virtual está fuertemente condicionada por el calendario académico: los miércoles y viernes en la franja de 9:00 a 14:00 h concentran los mayores picos de uso, mientras que los fines de semana, especialmente el sábado, presentan una actividad mínima distribuida de forma más uniforme a lo largo del día. Lo más probable es que en el curso 24-25 los alumnos tuviesen las dos clases semanales de la asignatura los miercoles a las **9:00 h** y los viernes a las **11:30 h**.
 
 ------------------------------------------------------------------------
 
-## Pregunta 2: ¿Existe una relación entre las consultas de material y el número de entregas? {-}
+## Pregunta 2: ¿Existe una relación entre las consultas de material y el número de entregas? {.unnumbered}
 
-Para encontrar la respuesta a esta pregunta, debemos calcular para cada
-usuario el número de eventos vinculados a la visualización o descarga de
-recursos (`Total_Consultas`) y el número de entregas realizadas
-(`Total_Entregas`). Finalmente, representamos la correlación entre ambas
-variables para determinar su grado de dependencia. Para saber cuales son
-los eventos de consultas o de entregas hay que hacer un análisis
-exploratorio de los eventos registrados en los logs, identificando todos
-los tipos de eventos únicos presentes en el conjunto de datos. Una vez
-clasificados, se aplicará una función de agregación para calcular la
-suma de ambos tipos de eventos por cada identificador de usuario único.
-El análisis se centra exclusivamente en el alumnado de la asignatura. En
-consecuencia, se excluyen los registros correspondientes al profesorado.
-Estos perfiles se identificaron mediante la detección de eventos de
-acceso restringidos para los estudiantes.
+Para encontrar la respuesta a esta pregunta, debemos calcular para cada usuario el número de eventos vinculados a la visualización o descarga de recursos (`Total_Consultas`) y el número de entregas realizadas (`Total_Entregas`). Finalmente, representamos la correlación entre ambas variables para determinar su grado de dependencia. Para saber cuales son los eventos de consultas o de entregas hay que hacer un análisis exploratorio de los eventos registrados en los logs, identificando todos los tipos de eventos únicos presentes en el conjunto de datos. Una vez clasificados, se aplicará una función de agregación para calcular la suma de ambos tipos de eventos por cada identificador de usuario único. El análisis se centra exclusivamente en el alumnado de la asignatura. En consecuencia, se excluyen los registros correspondientes al profesorado. Estos perfiles se identificaron mediante la detección de eventos de acceso restringidos para los estudiantes.
 
 ```{r consultas-vs-entregas-tabla, message=FALSE, warning=FALSE}
 #visualizamos todos los diferentes tipos de eventos
@@ -424,12 +323,7 @@ relacion_consultas_entregas %>%
   kable_styling(bootstrap_options = c("hover", "responsive"), full_width = FALSE)
 ```
 
-La Figura \@ref(fig:grafico-correlacion-consultas-entregas) representa
-el análisis de correlación de Pearson entre las consultas de recursos y
-las entregas realizadas. El gráfico incluye una línea de ajuste lineal
-que permite visualizar la dependencia estadística existente en la
-muestra analizada.
-
+La Figura \@ref(fig:grafico-correlacion-consultas-entregas) representa el análisis de correlación de Pearson entre las consultas de recursos y las entregas realizadas. El gráfico incluye una línea de ajuste lineal que permite visualizar la dependencia estadística existente en la muestra analizada.
 
 ```{r grafico-correlacion-consultas-entregas, fig.cap= "Relación entre consultas y entregas."}
 correlacion_valor <- cor(relacion_consultas_entregas$Total_Consultas, 
@@ -451,57 +345,21 @@ ggplot(relacion_consultas_entregas, aes(y = Total_Entregas, x = Total_Consultas)
   )
 ```
 
-Inicialmente se consideró el uso de la función ggpairs() para
-representar la matriz de correlación entre ambas variables. Sin embargo,
-dada la elevada densidad de los registros y la disparidad en los rangos
-de los datos del archivo original, dicha visualización resultaba confusa
-y dificultaba la interpretación de los resultados. Por eso, se optó por
-un diagrama de dispersión con anotaciones, usando el coeficiente de
-correlación de Pearson para evaluar la relación lineal entre el número
-de consultas y de entregas. Los resultados revelan una correlación
-positiva significativa entre ambas variables. Cuanto más material
-consultan los alumnos, más tareas entregan generalmente.
+Inicialmente se consideró el uso de la función ggpairs() para representar la matriz de correlación entre ambas variables. Sin embargo, dada la elevada densidad de los registros y la disparidad en los rangos de los datos del archivo original, dicha visualización resultaba confusa y dificultaba la interpretación de los resultados. Por eso, se optó por un diagrama de dispersión con anotaciones, usando el coeficiente de correlación de Pearson para evaluar la relación lineal entre el número de consultas y de entregas. Los resultados revelan una correlación positiva significativa entre ambas variables. Cuanto más material consultan los alumnos, más tareas entregan generalmente.
 
-**Interpretación.** El análisis de la relación entre la actividad de
-consulta y el cumplimiento de entregas permite extraer las siguientes
-observaciones clave:
+**Interpretación.** El análisis de la relación entre la actividad de consulta y el cumplimiento de entregas permite extraer las siguientes observaciones clave:
 
--   **Intensidad de la relación**: El coeficiente de correlación de
-    Pearson calculado es de **0.746**, lo que indica una correlación
-    positiva fuerte. Esto confirma que ambas variables tienden a crecer
-    de forma conjunta. A medida que aumenta la interacción con los
-    materiales didácticos incrementa también el número de tareas
-    enviadas. Esto sugiere que los estudiantes con mayor nivel de
-    actividad y revisión constante de materiales se preparan de manera
-    más exhaustiva para las evaluaciones, lo que sugiere que una
-    interacción constante con el material didáctico se traduce en un
-    mayor compromiso y efectividad en la resolución de las tareas
-    entregables.
+-   **Intensidad de la relación**: El coeficiente de correlación de Pearson calculado es de **0.746**, lo que indica una correlación positiva fuerte. Esto confirma que ambas variables tienden a crecer de forma conjunta. A medida que aumenta la interacción con los materiales didácticos incrementa también el número de tareas enviadas. Esto sugiere que los estudiantes con mayor nivel de actividad y revisión constante de materiales se preparan de manera más exhaustiva para las evaluaciones, lo que sugiere que una interacción constante con el material didáctico se traduce en un mayor compromiso y efectividad en la resolución de las tareas entregables.
 
--   **Comportamiento de los usuarios activos**: Según se observa en la
-    Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas),los 10
-    primeros alumnos con más entregas registra también volúmenes de
-    consulta significativamente altos. No obstante, el diagrama de
-    dispersión (Figura \@ref(fig:grafico-correlacion-consultas-entregas))
-    revela una alta densidad de puntos en la zona baja-izquierda,
-    indicando que un grupo considerable de alumnos mantiene un nivel de
-    actividad mínimo en ambos parámetros.
+-   **Comportamiento de los usuarios activos**: Según se observa en la Tabla \@ref(tab:tabla-de-relacion-entre-consultas-entregas-correlacion-consultas-entregas),los 10 primeros alumnos con más entregas registra también volúmenes de consulta significativamente altos. No obstante, el diagrama de dispersión (Figura \@ref(fig:grafico-correlacion-consultas-entregas)) revela una alta densidad de puntos en la zona baja-izquierda, indicando que un grupo considerable de alumnos mantiene un nivel de actividad mínimo en ambos parámetros.
 
--   **Tendencia lineal**: La línea de ajuste (rojo oscuro) en la Figura
-    \@ref(fig:grafico-correlacion-consultas-entregas) muestra una
-    pendiente ascendente clara. La dispersión de los puntos respecto a
-    esta línea sugiere que, si bien la consulta de materiales es un
-    predictor del éxito en las entregas, existen perfiles atípicos
-    (outliers) que logran realizar las entregas con un número reducido
-    de consultas previas o viceversa.
+-   **Tendencia lineal**: La línea de ajuste (rojo oscuro) en la Figura \@ref(fig:grafico-correlacion-consultas-entregas) muestra una pendiente ascendente clara. La dispersión de los puntos respecto a esta línea sugiere que, si bien la consulta de materiales es un predictor del éxito en las entregas, existen perfiles atípicos (outliers) que logran realizar las entregas con un número reducido de consultas previas o viceversa.
 
 **Conclusión.**
 
-
-En resumen, existe una dependencia estadística directa entre la consulta de recursos y la realización de entregas en el Aula Virtual. Este patrón sugiere que el éxito en la progresión del curso está estrechamente vinculado al compromiso previo con el material de estudio. Los datos demuestran que los estudiantes más activos en la plataforma no solo se limitan a subir las tareas, sino que consumen de manera mucho más elevada los recursos disponibles, lo que subraya la importancia de mantener un repositorio de materiales accesible y bien estructurado para fomentar la participación estudiantil. 
+En resumen, existe una dependencia estadística directa entre la consulta de recursos y la realización de entregas en el Aula Virtual. Este patrón sugiere que el éxito en la progresión del curso está estrechamente vinculado al compromiso previo con el material de estudio. Los datos demuestran que los estudiantes más activos en la plataforma no solo se limitan a subir las tareas, sino que consumen de manera mucho más elevada los recursos disponibles, lo que subraya la importancia de mantener un repositorio de materiales accesible y bien estructurado para fomentar la participación estudiantil.
 
 No obstante, no podemos olvidar que la correlación no implica causalidad. Esta distinción se evidencia en la presencia de un grupo de estudiantes que, pese a registrar un bajo número de consultas, completaron un volumen elevado de entregas. Este hallazgo plantea una nueva pregunta: determinar si existe una diferencia significativa en el las calificaciones entre estos perfiles y aquellos que interactúan con el material de forma más frecuente.
-
 
 ------------------------------------------------------------------------
 
@@ -569,36 +427,28 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
 
 **Interpretación.**
 
-  - Al analizar la cuestión sobre los recursos menos interactuados (lo restringimos a un total de 10 recursos, donde los recursos con menor interacción se encuentran en un umbral de menos de clicks o accesos), vemos que hay una gran disparidad entre los de alto impacto (de incluso miles de clicks por encima). 
-  
-  - Por un lado aparecen recursos borrados que indican que ya no están disponibles y por tanto, los accesos se limitan a los hechos con anterioridad. No tiene tanto que ver con el acceso del propio alumno por decisión, sino del sistema y la limpieza llevada a cabo por los responsables de la asignatura o del Aula Virtual.
-  
-  - También tenemos recursos que son meramente informativos, como el protocolo de la universidad, en los que generalmente los alumnos solo necesitan entrar inicialmente o puntualmente. De la misma manera ocurre con los recursos de evaluación, como puede ser el Kahoot "cangrejo" o la práctica E que aparecen en la gráfica, donde es coherente que solo se acceda la vez que va a ser evaluado dicho alumno.
-  
-  - Por último, cabe destacar la diferencia de uso de los boletines, ya que aparecen como intrautilizados el 2, 4 y 5. Esto puede significar que se ha trabajado de manera más dinamica en clase y no ha hecho falta acceder tanto al recurso, o que el interés en los ejercicios prácticos decae si no tienen quehacer una entrega.
+-   Al analizar la cuestión sobre los recursos menos interactuados (lo restringimos a un total de 10 recursos, donde los recursos con menor interacción se encuentran en un umbral de menos de clicks o accesos), vemos que hay una gran disparidad entre los de alto impacto (de incluso miles de clicks por encima).
+
+-   Por un lado aparecen recursos borrados que indican que ya no están disponibles y por tanto, los accesos se limitan a los hechos con anterioridad. No tiene tanto que ver con el acceso del propio alumno por decisión, sino del sistema y la limpieza llevada a cabo por los responsables de la asignatura o del Aula Virtual.
+
+-   También tenemos recursos que son meramente informativos, como el protocolo de la universidad, en los que generalmente los alumnos solo necesitan entrar inicialmente o puntualmente. De la misma manera ocurre con los recursos de evaluación, como puede ser el Kahoot "cangrejo" o la práctica E que aparecen en la gráfica, donde es coherente que solo se acceda la vez que va a ser evaluado dicho alumno.
+
+-   Por último, cabe destacar la diferencia de uso de los boletines, ya que aparecen como intrautilizados el 2, 4 y 5. Esto puede significar que se ha trabajado de manera más dinamica en clase y no ha hecho falta acceder tanto al recurso, o que el interés en los ejercicios prácticos decae si no tienen quehacer una entrega.
 
 **Conclusión.**
 
--  En conclusión, existe una cantidad considerable de recursos en el Aula Virtual que ocupan espacio y pueden generar ruido vistual sin que vayan a ser usados realmente por la mayoría del alumnado. También vemos que las evaluaciones entregables hacen que el uso de los boletines varíe en comparación a si no las hay. 
--  Para optimizar el espacio, quizás podría plantearse al equipo docente responsable hacer una evaluación sobre el material disponible en la web y tratar de integrar los documentos más informativos donde están los documentos más frecuentados, o en los avisos. De esta manera, se mejoraría la limpieza de la asignatura en la web y la eficiencia de los materiales colgados para enfocarlos específicamente en los que realmente generan interés y mejoran el rendimiento de nuestro alumnado.
+-   En conclusión, existe una cantidad considerable de recursos en el Aula Virtual que ocupan espacio y pueden generar ruido vistual sin que vayan a ser usados realmente por la mayoría del alumnado. También vemos que las evaluaciones entregables hacen que el uso de los boletines varíe en comparación a si no las hay.
+-   Para optimizar el espacio, quizás podría plantearse al equipo docente responsable hacer una evaluación sobre el material disponible en la web y tratar de integrar los documentos más informativos donde están los documentos más frecuentados, o en los avisos. De esta manera, se mejoraría la limpieza de la asignatura en la web y la eficiencia de los materiales colgados para enfocarlos específicamente en los que realmente generan interés y mejoran el rendimiento de nuestro alumnado.
 
 ------------------------------------------------------------------------
 
-## Pregunta 5: **Recursos de alto impacto** {-}
+## Pregunta 5: **Recursos de alto impacto** {.unnumbered}
 
-#### ¿Qué materiales generan el mayor volumen de interacción y qué indica esto sobre el interés o la dificultad de los contenidos? {-}
+#### ¿Qué materiales generan el mayor volumen de interacción y qué indica esto sobre el interés o la dificultad de los contenidos? {.unnumbered}
 
-Para responder a esta pregunta, analizamos el número total de eventos
-asociados a cada recursoEl objetivo es identificar qué materiales
-concentran más interacciones por parte del alumnado y determinar si esto
-puede interpretarse como un indicador de interés, seguimiento continuo o
-dificultad académica.
+Para responder a esta pregunta, analizamos el número total de eventos asociados a cada recursoEl objetivo es identificar qué materiales concentran más interacciones por parte del alumnado y determinar si esto puede interpretarse como un indicador de interés, seguimiento continuo o dificultad académica.
 
-En primer lugar, agrupamos los registros por el contexto del evento y
-contabilizamos el número de accesos o acciones realizadas sobre cada
-recurso. Posteriormente, eliminamos el contexto general del curso para
-centrarnos únicamente en materiales concretos como cuestionarios, tareas
-o controles de asistencia.
+En primer lugar, agrupamos los registros por el contexto del evento y contabilizamos el número de accesos o acciones realizadas sobre cada recurso. Posteriormente, eliminamos el contexto general del curso para centrarnos únicamente en materiales concretos como cuestionarios, tareas o controles de asistencia.
 
 ```{r}
 # Conteo de interacciones por recurso
@@ -616,8 +466,7 @@ recursos_top10
 
 ```
 
-La Tabla \@ref(tab:tabla-recursos-impacto) muestra los diez recursos con
-mayor volumen de interacción durante el curso.
+La Tabla \@ref(tab:tabla-recursos-impacto) muestra los diez recursos con mayor volumen de interacción durante el curso.
 
 ```{r tabla-recursos-impacto}
 recursos_top10 %>%
@@ -632,8 +481,7 @@ recursos_top10 %>%
   )
 ```
 
-La Figura \@ref(fig:fig-recursos-impacto) representa visualmente los
-materiales más utilizados por el alumnado.
+La Figura \@ref(fig:fig-recursos-impacto) representa visualmente los materiales más utilizados por el alumnado.
 
 ```{r fig-recursos-impacto}
 ggplot(recursos_top10,
@@ -655,19 +503,9 @@ ggplot(recursos_top10,
   theme_minimal(base_size = 12)
 ```
 
-El análisis muestra que las actividades evaluables concentran la mayor
-parte de la interacción del alumnado. El recurso más utilizado es el
-**Cuestionario Global de la Asignatura**, con aproximadamente **4.652
-interacciones**, seguido del **Control de Asistencia Online** con
-**3.637 eventos**. Ambos recursos destacan claramente sobre el resto, lo
-que indica que las actividades relacionadas con evaluación y seguimiento
-obligatorio generan una participación intensiva.
+El análisis muestra que las actividades evaluables concentran la mayor parte de la interacción del alumnado. El recurso más utilizado es el **Cuestionario Global de la Asignatura**, con aproximadamente **4.652 interacciones**, seguido del **Control de Asistencia Online** con **3.637 eventos**. Ambos recursos destacan claramente sobre el resto, lo que indica que las actividades relacionadas con evaluación y seguimiento obligatorio generan una participación intensiva.
 
-También presentan una elevada actividad distintos cuestionarios
-temáticos como **Cuestionario Tema 5** (2.083 interacciones),
-**Cuestionario Tema 1** (1.663) y **Cuestionario Tema 2** (1.515). Esto
-sugiere que los cuestionarios no solo fueron utilizados como método de
-evaluación, sino también como herramienta de repaso y autoaprendizaje.
+También presentan una elevada actividad distintos cuestionarios temáticos como **Cuestionario Tema 5** (2.083 interacciones), **Cuestionario Tema 1** (1.663) y **Cuestionario Tema 2** (1.515). Esto sugiere que los cuestionarios no solo fueron utilizados como método de evaluación, sino también como herramienta de repaso y autoaprendizaje.
 
 En cuanto a las tareas prácticas, destacan especialmente:
 
@@ -681,38 +519,21 @@ En cuanto a las tareas prácticas, destacan especialmente:
 
 -   **Práctica 3: Entrega de ejercicios** (1.578)
 
-Además, las tareas asociadas a plataformas externas como **Datacamp**
-también muestran una actividad considerable, lo que refleja una
-participación activa en actividades complementarias de aprendizaje
-autónomo.
+Además, las tareas asociadas a plataformas externas como **Datacamp** también muestran una actividad considerable, lo que refleja una participación activa en actividades complementarias de aprendizaje autónomo.
 
 **Conclusión.**
 
-En conclusión, los recursos de mayor impacto dentro del Aula Virtual son
-aquellos vinculados a evaluación, cuestionarios y prácticas entregables.
-La alta interacción observada en estos materiales sugiere que el
-alumnado concentra su actividad principalmente en recursos evaluables o
-percibidos como importantes para el seguimiento de la asignatura.
+En conclusión, los recursos de mayor impacto dentro del Aula Virtual son aquellos vinculados a evaluación, cuestionarios y prácticas entregables. La alta interacción observada en estos materiales sugiere que el alumnado concentra su actividad principalmente en recursos evaluables o percibidos como importantes para el seguimiento de la asignatura.
 
-Asimismo, la repetición de accesos en determinadas prácticas y
-cuestionarios podría indicar que algunos contenidos requirieron un
-esfuerzo adicional de comprensión o revisión. Esto puede resultar útil
-para el profesorado a la hora de identificar temas especialmente
-complejos o recursos que generan mayor implicación del alumnado.
+Asimismo, la repetición de accesos en determinadas prácticas y cuestionarios podría indicar que algunos contenidos requirieron un esfuerzo adicional de comprensión o revisión. Esto puede resultar útil para el profesorado a la hora de identificar temas especialmente complejos o recursos que generan mayor implicación del alumnado.
 
 ------------------------------------------------------------------------
 
-## Pregunta 6: Patrones de conectividad {-}
+## Pregunta 6: Patrones de conectividad {.unnumbered}
 
-El análisis de la procedencia de las conexiones es fundamental para
-entender el comportamiento del alumnado y la utilidad de las
-infraestructuras universitarias. En esta sección, nos proponemos
-investigar en qué medida predomina el acceso desde la red interna de la
-universidad (LAN/WiFi eduroam) frente a conexiones externas (hogares o
-redes móviles) durante el horario lectivo.
+El análisis de la procedencia de las conexiones es fundamental para entender el comportamiento del alumnado y la utilidad de las infraestructuras universitarias. En esta sección, nos proponemos investigar en qué medida predomina el acceso desde la red interna de la universidad (LAN/WiFi eduroam) frente a conexiones externas (hogares o redes móviles) durante el horario lectivo.
 
-La tabla \@ref(tab:tabla-contador-ip) cuales son las direcciones
-IP más repetidas durante horario lectivo.
+La tabla \@ref(tab:tabla-contador-ip) cuales son las direcciones IP más repetidas durante horario lectivo.
 
 ```{r tabla-contador-ip}
 contador_ips <- curso_2025 %>%
@@ -720,11 +541,8 @@ contador_ips <- curso_2025 %>%
   count(`Dirección IP`, sort = TRUE) %>% head(10)
 kable(contador_ips, caption = "Top 10 de direcciones IP más frecuentes en horario lectivo")
 ```
-La dirección IP con mas registros **2001:720:1014:88:0:0:a:6b7** pertenece a la infraestructura WIFI eduroam. En segundo lugar hay una IP que corresponde a una 
-compañía telefónica (Posiblemente se trate de una IP de un alumno muy aplicado o 
-una casa donde varias personas se conectan desde la misma red). Y la última 
-direccion IP con más diferencia de uso a todas las demás **147.156.86.41**, se 
-trata de la IP que utilizan los ordenadores de la universidad.
+
+La dirección IP con mas registros **2001:720:1014:88:0:0:a:6b7** pertenece a la infraestructura WIFI eduroam. En segundo lugar hay una IP que corresponde a una compañía telefónica (Posiblemente se trate de una IP de un alumno muy aplicado o una casa donde varias personas se conectan desde la misma red). Y la última direccion IP con más diferencia de uso a todas las demás **147.156.86.41**, se trata de la IP que utilizan los ordenadores de la universidad.
 
 El gráfico \@ref(fig:fig-conexiones-lectivas) muestra la proporcion de conexiones internas y externas en horario lectivo.
 
@@ -765,14 +583,10 @@ ggplot(logs_e6, aes(x = Horario, fill = Tipo_conexion)) +
   ) +
   theme_minimal()
 ```
-No todas las conexiones tienen asociadas una dirección IP. Por eso la suma de 
-los porcentajes no es igual a 100.
 
+No todas las conexiones tienen asociadas una dirección IP. Por eso la suma de los porcentajes no es igual a 100.
 
-Para tener una vista más clara de cuando son los patrones de mas
-conectividad, la Figura \@ref(fig:fig-histograma-origen-dia) que reptresenta 
-para cada día de la semana, la cantidad de conexiones internas o externas por 
-hora.
+Para tener una vista más clara de cuando son los patrones de mas conectividad, la Figura \@ref(fig:fig-histograma-origen-dia) que reptresenta para cada día de la semana, la cantidad de conexiones internas o externas por hora.
 
 ```{r fig-histograma-origen-dia, fig.cap = "Histogramas de conexiones por día de la semana."}
 logs_e6 <- logs_e6 %>%
@@ -792,11 +606,9 @@ ggplot(logs_e6, aes(x = factor(Horas), fill = Tipo_conexion)) +
   theme_light() +
   theme(legend.position = "top", strip.background = element_rect(fill = "#5D6D7E"))
 ```
-**Interpretación.** El analisis de las conexiones internas y externas durante 
-el horario de clase concluye en:
 
--   **Horario lectivo:** La gran mayoría de las conexiones se producen en esta 
-    franja horaria. Poco más del 70% de los accesos provienen de la red interna.
+**Interpretación.** El analisis de las conexiones internas y externas durante el horario de clase concluye en:
 
--   **Fuera de horario:** Aqui tenemos muchos menos accesos que en horario de 
-    clase. Poco más del 90% de las conexiones son externas.
+-   **Horario lectivo:** La gran mayoría de las conexiones se producen en esta franja horaria. Poco más del 70% de los accesos provienen de la red interna.
+
+-   **Fuera de horario:** Aqui tenemos muchos menos accesos que en horario de clase. Poco más del 90% de las conexiones son externas.
