@@ -434,8 +434,7 @@ ggplot(head(recursos_especificos, 10), aes(x = reorder(`Contexto del evento`, Cl
 -   En conclusión, existe una cantidad considerable de recursos en el Aula Virtual que ocupan espacio y pueden generar ruido vistual sin que vayan a ser usados realmente por la mayoría del alumnado. También vemos que las evaluaciones entregables hacen que el uso de los boletines varíe en comparación a si no las hay.
 -   Para optimizar el espacio, quizás podría plantearse al equipo docente responsable hacer una evaluación sobre el material disponible en la web y tratar de integrar los documentos más informativos donde están los documentos más frecuentados, o en los avisos. De esta manera, se mejoraría la limpieza de la asignatura en la web y la eficiencia de los materiales colgados para enfocarlos específicamente en los que realmente generan interés y mejoran el rendimiento de nuestro alumnado.
 
-
-----------------------------------------------------------
+------------------------------------------------------------------------
 
 ## Pregunta 4: ¿Qué proporción de la actividad total del alumnado es consulta pasiva de materiales frente a participación activa en entregas y cuestionarios?
 
@@ -475,7 +474,6 @@ cat("Distribución de la actividad del alumnado:\n")
 print(resumen_p4)
 ```
 
-
 ```{r tabla-p4}
 resumen_p4 %>%
   rename(`Tipo de actividad` = Tipo,
@@ -511,7 +509,6 @@ ggplot(resumen_p4, aes(x = "", y = Total, fill = Tipo)) +
   theme(legend.position = "right")
 ```
 
-
 ```{r fig-p4-barras, fig.cap="Volumen absoluto de eventos por tipo de actividad del alumnado durante el curso 2024-2025."}
 ggplot(resumen_p4, aes(x = reorder(Tipo, -Total), y = Total, fill = Tipo)) +
   geom_col(width = 0.6, show.legend = FALSE) +
@@ -532,6 +529,7 @@ ggplot(resumen_p4, aes(x = reorder(Tipo, -Total), y = Total, fill = Tipo)) +
   ) +
   theme_minimal(base_size = 12)
 ```
+
 ------------------------------------------------------------------------
 
 ## Pregunta 5: **Recursos de alto impacto** {.unnumbered}
@@ -572,7 +570,7 @@ recursos_top10 %>%
   )
 ```
 
-La Figura \@ref(fig:fig-recursos-impacto) representa visualmente los materiales más utilizados por el alumnado.
+La Figura representa visualmente los materiales más utilizados por el alumnado.
 
 ```{r fig-recursos-impacto, fig.cap="Representación visual de los materiales más utilizados por el alumnado"}
 ggplot(recursos_top10,
@@ -600,17 +598,17 @@ También presentan una elevada actividad distintos cuestionarios temáticos como
 
 En cuanto a las tareas prácticas, destacan especialmente:
 
--   **Examen Laboratorio TD 1ª Convocatoria 2025** (2.052 interacciones)
+• Examen Laboratorio TD 1ª Convocatoria 2025 (2.031 interacciones)
 
--   **Práctica 1: Importación - Tarea** (1.979)
+• Práctica 1: Importación - Tarea (1.952)
 
--   **Práctica 4. Entrega de ejercicios** (1.938)
+• Práctica 4. Entrega de ejercicios (1.923)
 
--   **Práctica 2. Visualización** (1.585)
+• Práctica 2. Visualización (1.561)
 
--   **Práctica 3: Entrega de ejercicios** (1.578)
+• Práctica 3: Entrega de ejercicios (1.554)
 
-Además, las tareas asociadas a plataformas externas como **Datacamp** también muestran una actividad considerable, lo que refleja una participación activa en actividades complementarias de aprendizaje autónomo.
+Además, las tareas asociadas a plataformas externas también muestran una actividad considerable, lo que refleja una participación activa en actividades complementarias de aprendizaje autónomo.
 
 **Conclusión.**
 
