@@ -363,7 +363,7 @@ No obstante, no podemos olvidar que la correlación no implica causalidad. Esta 
 
 ------------------------------------------------------------------------
 
-## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo?
+## Pregunta 3: Optimización de recursos. ¿Qué recursos o materiales presentan un nivel de interacción nulo o muy bajo? {.unnumbered}
 
 ```{r recursos-menos-vistos}
 
